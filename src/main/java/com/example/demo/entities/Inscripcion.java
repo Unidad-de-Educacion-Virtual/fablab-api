@@ -1,5 +1,8 @@
 package com.example.demo.entities;
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,10 +16,12 @@ public class Inscripcion {
 
     @ManyToOne
     @JoinColumn(name = "participante_id", nullable = false)
+    @JsonIgnore
     private Participante participante;
 
     @ManyToOne
     @JoinColumn(name = "programacion_id", nullable = false)
+    @JsonIgnore
     private Programacion programacion;
 
     private LocalDate fecha;
