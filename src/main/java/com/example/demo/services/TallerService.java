@@ -8,15 +8,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TalleresService {
+public class TallerService {
 
     private final TallerRepository tallerRepository;
 
-    public TalleresService(TallerRepository tallerRepository) {
+    public TallerService(TallerRepository tallerRepository) {
         this.tallerRepository = tallerRepository;
     }
-
-    public List<Taller> listarTalleres() {
+    
+    public Taller buscarTaller(long id) {
+     return tallerRepository.getReferenceById(id);
+    } 
+    
+    public List<Taller> listarTaller() {
         return tallerRepository.findAll();
     }
 
@@ -35,4 +39,5 @@ public class TalleresService {
     public void eliminarTaller(Long id) {
         tallerRepository.deleteById(id);
     }
+    
 }

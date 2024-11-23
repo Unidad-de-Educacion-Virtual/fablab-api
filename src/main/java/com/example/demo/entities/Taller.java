@@ -11,7 +11,8 @@ public class Taller {
     private Long id;
 
     private String nombre;
-
+    
     @Column(columnDefinition = "TEXT")
     private String descripcion;
+
 }
