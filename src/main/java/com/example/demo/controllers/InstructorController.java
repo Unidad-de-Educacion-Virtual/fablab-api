@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import com.example.demo.DTO.InstructorDTO;
+import com.example.demo.DTO.InstructorRequestDTO;
 import com.example.demo.entities.Instructor;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.InstructorService;
@@ -36,21 +37,25 @@ public class InstructorController {
     }
    
     @PostMapping
-    public ResponseEntity<Instructor> crearInstructor(@RequestBody Instructor instructor) {
+    public ResponseEntity<Instructor> crearInstructor(@RequestBody InstructorRequestDTO instructorRequestDTO) {
+        Instructor instructor = new Instructor();
+        instructor.setNombre(instructorRequestDTO.getNombre());
+        instructor.setDocumento(instructorRequestDTO.getDocumento());
         return ResponseEntity.ok(instructorService.crearInstructor(instructor));
     }
 
    
     @PutMapping("/{id}")
-    public ResponseEntity<Instructor> actualizarInstructor(@PathVariable Long id, @RequestBody Instructor instructor) {
-        return instructorService.actualizarInstructor(id, instructor)
+    public ResponseEntity<Instructor> actualizarInstructor(@PathVariable Long id, @RequestBody InstructorRequestDTO instructorRequestDTO) {
+        return instructorService.actualizarInstructor(id, instructorRequestDTO.getNombre(), instructorRequestDTO.getDocumento())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTaller(@PathVariable Long id) {
-    	instructorService.eliminarInstructor(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Instructor> eliminarInstructor(@PathVariable Long id) {
+        return instructorService.eliminarInstructor(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

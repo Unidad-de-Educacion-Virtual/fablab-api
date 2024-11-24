@@ -28,15 +28,20 @@ public class MunicipioService {
         return municipioRepository.save(municipio);
     }
 
-    public Optional<Municipio> actualizarMunicipio(Long id, Municipio municipioActualizado) {
+    public Optional<Municipio> actualizarMunicipio(Long id, String nombre, String dane) {
         return municipioRepository.findById(id).map(municipio -> {
-            municipio.setNombre(municipioActualizado.getNombre());
-            municipio.setDane(municipioActualizado.getDane());
+            municipio.setNombre(nombre);
+            municipio.setDane(dane);
             return municipioRepository.save(municipio);
         });
     }
 
-    public void eliminarMunicipio(Long id) {
-        municipioRepository.deleteById(id);
+
+    public Optional<Municipio> eliminarMunicipio(Long id) {
+        return municipioRepository.findById(id).map(municipio -> {
+            municipioRepository.delete(municipio);
+            return municipio;
+        });
     }
+
 }

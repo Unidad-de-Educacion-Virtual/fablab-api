@@ -28,16 +28,21 @@ public class TallerService {
         return tallerRepository.save(taller);
     }
 
-    public Optional<Taller> actualizarTaller(Long id, Taller tallerActualizado) {
+    public Optional<Taller> actualizarTaller(Long id, String nombre, String descripcion) {
         return tallerRepository.findById(id).map(taller -> {
-            taller.setNombre(tallerActualizado.getNombre());
-            taller.setDescripcion(tallerActualizado.getDescripcion());
+            taller.setNombre(nombre);
+            taller.setDescripcion(descripcion);
             return tallerRepository.save(taller);
         });
     }
 
-    public void eliminarTaller(Long id) {
-        tallerRepository.deleteById(id);
+
+    public Optional<Taller> eliminarTaller(Long id) {
+        return tallerRepository.findById(id).map(taller -> {
+            tallerRepository.delete(taller);
+            return taller; // Devuelve el taller eliminado
+        });
     }
+
     
 }

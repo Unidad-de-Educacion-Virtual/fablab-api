@@ -3,6 +3,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.DTO.UbicacionDTO;
+import com.example.demo.DTO.UbicacionRequestDTO;
 import com.example.demo.entities.Ubicacion;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.UbicacionService;
@@ -34,21 +35,25 @@ private final UbicacionService ubicacionService;
     }
    
     @PostMapping
-    public ResponseEntity<Ubicacion> crearUbicacion(@RequestBody Ubicacion ubicacion) {
+    public ResponseEntity<Ubicacion> crearUbicacion(@RequestBody UbicacionRequestDTO ubicacionRequestDTO) {
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setNombre(ubicacionRequestDTO.getNombre());
         return ResponseEntity.ok(ubicacionService.crearUbicacion(ubicacion));
     }
-
    
     @PutMapping("/{id}")
-    public ResponseEntity<Ubicacion> actualizarUbicacion(@PathVariable Long id, @RequestBody Ubicacion ubicacion) {
-        return ubicacionService.actualizarUbicacion(id, ubicacion)
+    public ResponseEntity<Ubicacion> actualizarUbicacion(@PathVariable Long id, @RequestBody UbicacionRequestDTO ubicacionRequestDTO) {
+        return ubicacionService.actualizarUbicacion(id, ubicacionRequestDTO.getNombre())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTaller(@PathVariable Long id) {
-    	ubicacionService.eliminarUbicacion(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Ubicacion> eliminarUbicacion(@PathVariable Long id) {
+        return ubicacionService.eliminarUbicacion(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 }

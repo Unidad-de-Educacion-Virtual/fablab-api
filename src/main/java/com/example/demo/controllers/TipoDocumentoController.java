@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.DTO.TipoDocumentoDTO;
+import com.example.demo.DTO.TipoDocumentoRequestDTO;
 import com.example.demo.entities.TipoDocumento;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.TipoDocumentoService;
@@ -36,20 +37,25 @@ public class TipoDocumentoController {
     }
 
     @PostMapping
-    public ResponseEntity<TipoDocumento> crearTipoDocumento(@RequestBody TipoDocumento tipoDocumento) {
+    public ResponseEntity<TipoDocumento> crearTipoDocumento(@RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) {
+        TipoDocumento tipoDocumento = new TipoDocumento();
+        tipoDocumento.setDescripcion(tipoDocumentoRequestDTO.getDescripcion());
         return ResponseEntity.ok(tipoDocumentoService.crearTipoDocumento(tipoDocumento));
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<TipoDocumento> actualizarTipoDocumento(@PathVariable Long id, @RequestBody TipoDocumento tipoDocumento) {
-        return tipoDocumentoService.actualizarTipoDocumento(id, tipoDocumento)
+    public ResponseEntity<TipoDocumento> actualizarTipoDocumento(@PathVariable Long id, @RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) {
+        return tipoDocumentoService.actualizarTipoDocumento(id, tipoDocumentoRequestDTO.getDescripcion())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTipoDocumento(@PathVariable Long id) {
-        tipoDocumentoService.eliminarTipoDocumento(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<TipoDocumento> eliminarTipoDocumento(@PathVariable Long id) {
+        return tipoDocumentoService.eliminarTipoDocumento(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 }

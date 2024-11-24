@@ -28,14 +28,19 @@ public class TipoDocumentoService {
         return tipoDocumentoRepository.save(tipoDocumento);
     }
 
-    public Optional<TipoDocumento> actualizarTipoDocumento(Long id, TipoDocumento tipoDocumentoActualizado) {
+    public Optional<TipoDocumento> actualizarTipoDocumento(Long id, String descripcion) {
         return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
-            tipoDocumento.setDescripcion(tipoDocumentoActualizado.getDescripcion());
+            tipoDocumento.setDescripcion(descripcion);
             return tipoDocumentoRepository.save(tipoDocumento);
         });
     }
 
-    public void eliminarTipoDocumento(Long id) {
-        tipoDocumentoRepository.deleteById(id);
+
+    public Optional<TipoDocumento> eliminarTipoDocumento(Long id) {
+        return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
+            tipoDocumentoRepository.delete(tipoDocumento);
+            return tipoDocumento;
+        });
     }
+
 }

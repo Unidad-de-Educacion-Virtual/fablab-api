@@ -28,14 +28,19 @@ public class UbicacionService {
         return ubicacionRepository.save(Ubicacion);
     }
 
-    public Optional<Ubicacion> actualizarUbicacion(Long id, Ubicacion ubicacionActualizado) {
-        return ubicacionRepository.findById(id).map(Ubicacion -> {
-            Ubicacion.setNombre(ubicacionActualizado.getNombre());
-            return ubicacionRepository.save(Ubicacion);
+    public Optional<Ubicacion> actualizarUbicacion(Long id, String nombre) {
+        return ubicacionRepository.findById(id).map(ubicacion -> {
+            ubicacion.setNombre(nombre);
+            return ubicacionRepository.save(ubicacion);
         });
     }
 
-    public void eliminarUbicacion(Long id) {
-        ubicacionRepository.deleteById(id);
+
+    public Optional<Ubicacion> eliminarUbicacion(Long id) {
+        return ubicacionRepository.findById(id).map(ubicacion -> {
+            ubicacionRepository.delete(ubicacion);
+            return ubicacion;
+        });
     }
+
 }

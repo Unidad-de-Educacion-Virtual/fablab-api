@@ -28,15 +28,20 @@ public class InstructorService {
         return instructorRepository.save(Instructor);
     }
 
-    public Optional<Instructor> actualizarInstructor(Long id, Instructor instructorActualizado) {
-        return instructorRepository.findById(id).map(Instructor -> {
-            Instructor.setNombre(instructorActualizado.getNombre());
-            Instructor.setDocumento(instructorActualizado.getDocumento());
-            return instructorRepository.save(Instructor);
+    public Optional<Instructor> actualizarInstructor(Long id, String nombre, String documento) {
+        return instructorRepository.findById(id).map(instructor -> {
+            instructor.setNombre(nombre);
+            instructor.setDocumento(documento);
+            return instructorRepository.save(instructor);
         });
     }
 
-    public void eliminarInstructor(Long id) {
-        instructorRepository.deleteById(id);
+
+    public Optional<Instructor> eliminarInstructor(Long id) {
+        return instructorRepository.findById(id).map(instructor -> {
+            instructorRepository.delete(instructor);
+            return instructor;
+        });
     }
+
 }

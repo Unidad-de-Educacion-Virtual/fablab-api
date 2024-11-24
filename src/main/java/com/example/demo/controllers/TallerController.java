@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 import com.example.demo.DTO.TallerDTO;
+import com.example.demo.DTO.TallerRequestDTO;
 import com.example.demo.entities.Taller;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.TallerService;
@@ -36,21 +37,27 @@ public class TallerController {
     }
    
     @PostMapping
-    public ResponseEntity<Taller> crearTaller(@RequestBody Taller taller) {
+    public ResponseEntity<Taller> crearTaller(@RequestBody TallerRequestDTO tallerRequestDTO) {
+        Taller taller = new Taller();
+        taller.setNombre(tallerRequestDTO.getNombre());
+        taller.setDescripcion(tallerRequestDTO.getDescripcion());
         return ResponseEntity.ok(tallerService.crearTaller(taller));
     }
 
    
     @PutMapping("/{id}")
-    public ResponseEntity<Taller> actualizarTaller(@PathVariable Long id, @RequestBody Taller taller) {
-        return tallerService.actualizarTaller(id, taller)
+    public ResponseEntity<Taller> actualizarTaller(@PathVariable Long id, @RequestBody TallerRequestDTO tallerRequestDTO) {
+        return tallerService.actualizarTaller(id, tallerRequestDTO.getNombre(), tallerRequestDTO.getDescripcion())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarTaller(@PathVariable Long id) {
-        tallerService.eliminarTaller(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Taller> eliminarTaller(@PathVariable Long id) {
+        return tallerService.eliminarTaller(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 }

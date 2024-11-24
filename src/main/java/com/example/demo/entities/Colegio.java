@@ -12,10 +12,11 @@ public class Colegio {
 
     private String nombre;
 
+    private String dane;
     @ManyToOne
     @JoinColumn(name = "municipio_id", nullable = false)
     private Municipio municipio;
 
-    private String dane;
+    
 
 }
