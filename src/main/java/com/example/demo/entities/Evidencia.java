@@ -17,7 +17,6 @@ public class Evidencia {
     @Column(columnDefinition = "TEXT")
     private String observacion;
 
-    private LocalDate fecha;
-
-
+    @Column
+    private String url;
 }

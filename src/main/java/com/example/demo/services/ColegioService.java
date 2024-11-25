@@ -2,10 +2,14 @@ package com.example.demo.services;
 
 import com.example.demo.entities.Colegio;
 import com.example.demo.entities.Municipio;
+import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.ColegioRepository;
 import com.example.demo.repositories.MunicipioRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,50 +17,78 @@ import java.util.Optional;
 
 @Service
 public class ColegioService {
+	@Autowired
+	private ColegioRepository colegioRepository;
+	
+	@Autowired
+	private MunicipioRepository municipioRepository;
+	
+	@Autowired
+	private MunicipioService municipioService;
 
-	 private final ColegioRepository colegioRepository;
-	 private final MunicipioRepository municipioRepository; // Repositorio para buscar Municipio
-
-	    public ColegioService(ColegioRepository colegioRepository, MunicipioRepository municipioRepository) {
-	        this.colegioRepository = colegioRepository;
-	        this.municipioRepository = municipioRepository;
-	    }
-
-    public Colegio buscarColegio(long id) {
-        return colegioRepository.getReferenceById(id);
+    public Colegio buscarColegio(Long id) {
+    	this.showErrorIfNotExist(id);
+    	Optional<Colegio> colegio = colegioRepository.findById(id);
+    	
+        return colegio.get();
     }
 
     public List<Colegio> listarColegios() {
-        return colegioRepository.findAll();
+    	return colegioRepository.findAll();
+    }
+    
+    public Colegio crearColegio(Colegio colegio) throws ResourceAlreadyExistException, ResourceNotFoundException {
+    	this.showErrorIfExist(colegio);
+    	municipioService.showErrorIfNotExist(colegio.getMunicipio());
+    	
+    	return colegioRepository.save(colegio);
+    }
+    
+    public Colegio actualizarColegio(Colegio colegio) throws ResourceNotFoundException {
+    	this.showErrorIfNotExist(colegio);
+    	municipioService.showErrorIfNotExist(colegio.getMunicipio());
+    	
+    	return colegioRepository.save(colegio);
     }
 
-    public Colegio crearColegio(String nombre, Long municipioId, String dane) {
-    	Municipio municipio;
+    public Colegio eliminarColegio(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
+    	this.showErrorIfNotExist(id);
+    	Optional<Colegio> colegio = colegioRepository.findById(id);
+    	
     	try {
-        	municipio = municipioRepository.getReferenceById(municipioId);
-		} catch (Exception e) {
-	        throw new ResourceNotFoundException("El municipio con id " + municipioId + " no existe.");
-		}
-    	Colegio colegio = new Colegio();
-        colegio.setNombre(nombre);
-        colegio.setMunicipio(municipio);
-        colegio.setDane(dane);
-        return colegioRepository.save(colegio);
+    		colegioRepository.deleteById(id);
+    	} catch(DataIntegrityViolationException e) {
+    		throw new ResourceReferencedByOthersException("El colegio se encuentra referenciado por otras entidades.");
+    	}
+    	
+    	return colegio.get();
+    }
+    
+    public void showErrorIfNotExist	(Colegio colegio) throws ResourceNotFoundException {
+    	if(colegio == null) {
+    		throw new ResourceNotFoundException("El colegio no existe.");
+    	}
+    	showErrorIfNotExist(colegio.getId());
+    }
+    
+    public void showErrorIfNotExist	(Long id) throws ResourceNotFoundException {
+    	Optional<Municipio> municipio = municipioRepository.findById(id);
+    	
+    	if(municipio.isEmpty()) {
+    		throw new ResourceNotFoundException("El colegio con id " + id + " no existe.");
+    	}
     }
 
-
-    public Optional<Colegio> actualizarColegio(Long id, String nombre, Long municipioId, String dane) {
-        return colegioRepository.findById(id).map(colegio -> {
-            Municipio municipio = municipioRepository.findById(municipioId)
-                    .orElseThrow(() -> new ResourceNotFoundException("El municipio con id " + municipioId + " no existe."));
-            colegio.setNombre(nombre);
-            colegio.setMunicipio(municipio);
-            colegio.setDane(dane);
-            return colegioRepository.save(colegio);
-        });
+    public void showErrorIfExist (Colegio colegio) throws ResourceAlreadyExistException {
+    	showErrorIfExist(colegio.getId());
     }
-
-    public void eliminarColegio(Long id) {
-        colegioRepository.deleteById(id);
+    
+    public void showErrorIfExist (Long id) throws ResourceAlreadyExistException {
+    	Optional<Colegio> colegio = colegioRepository.findById(id);
+    	
+    	if(colegio.isPresent()) {
+    		throw new ResourceAlreadyExistException("El colegio con id " + id + " ya existe.");
+    	}
     }
+    
 }

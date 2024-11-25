@@ -26,6 +26,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(createErrorResponse("Recurso no encontrado: " + ex.getMessage()), HttpStatus.NOT_FOUND);
     }
     
+    @ExceptionHandler(ResourceAlreadyExistException.class)
+    public ResponseEntity<Object> handleResourceAlreadyExistException(ResourceAlreadyExistException ex, WebRequest request) {
+        return new ResponseEntity<>(createErrorResponse("Recurso no ya existente: " + ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(ResourceReferencedByOthersException.class)
+    public ResponseEntity<Object> handleResourceReferencedByOthersException(ResourceReferencedByOthersException ex, WebRequest request) {
+        return new ResponseEntity<>(createErrorResponse("Violación de integridad: " + ex.getMessage()), HttpStatus.CONFLICT);
+    }
+    
+    
     private ErrorResponse createErrorResponse(String message) {
         return new ErrorResponse(true, message);
     }
