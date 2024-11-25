@@ -1,6 +1,6 @@
 package com.example.demo.controllers;
 import com.example.demo.entities.Evidencia;
-import com.example.demo.services.EvidenciasService;
+import com.example.demo.services.EvidenciaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +10,9 @@ import java.util.List;
 @RequestMapping("/api/evidencias")
 public class EvidenciasController {
 
-    private final EvidenciasService evidenciasService;
+    private final EvidenciaService evidenciasService;
 
-    public EvidenciasController(EvidenciasService evidenciasService) {
+    public EvidenciasController(EvidenciaService evidenciasService) {
         this.evidenciasService = evidenciasService;
     }
 

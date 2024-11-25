@@ -21,9 +21,6 @@ public class ColegioService {
 	private ColegioRepository colegioRepository;
 	
 	@Autowired
-	private MunicipioRepository municipioRepository;
-	
-	@Autowired
 	private MunicipioService municipioService;
 
     public Colegio buscarColegio(Long id) {
@@ -39,7 +36,7 @@ public class ColegioService {
     
     public Colegio crearColegio(Colegio colegio) throws ResourceAlreadyExistException, ResourceNotFoundException {
     	this.showErrorIfExist(colegio);
-    	municipioService.showErrorIfNotExist(colegio.getMunicipio());
+    	municipioService.showErrorIfExist(colegio.getMunicipio());
     	
     	return colegioRepository.save(colegio);
     }
@@ -72,18 +69,18 @@ public class ColegioService {
     }
     
     public void showErrorIfNotExist	(Long id) throws ResourceNotFoundException {
-    	Optional<Municipio> municipio = municipioRepository.findById(id);
+    	Optional<Colegio> colegio = colegioRepository.findById(id);
     	
-    	if(municipio.isEmpty()) {
+    	if(colegio.isEmpty()) {
     		throw new ResourceNotFoundException("El colegio con id " + id + " no existe.");
     	}
     }
 
-    public void showErrorIfExist (Colegio colegio) throws ResourceAlreadyExistException {
+    public void showErrorIfExist(Colegio colegio) throws ResourceAlreadyExistException {
     	showErrorIfExist(colegio.getId());
     }
     
-    public void showErrorIfExist (Long id) throws ResourceAlreadyExistException {
+    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
     	Optional<Colegio> colegio = colegioRepository.findById(id);
     	
     	if(colegio.isPresent()) {
