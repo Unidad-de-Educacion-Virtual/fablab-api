@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/programaciones")
-public class ProgramacionesController {
+@RequestMapping("/api/programacion")
+public class ProgramacionController {
 
     private final ProgramacionesService programacionesService;
 
-    public ProgramacionesController(ProgramacionesService programacionesService) {
+    public ProgramacionController(ProgramacionesService programacionesService) {
         this.programacionesService = programacionesService;
     }
 
