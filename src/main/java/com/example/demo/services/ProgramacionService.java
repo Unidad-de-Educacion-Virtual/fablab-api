@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Programacion;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.ProgramacionRepository;
@@ -41,9 +40,7 @@ public class ProgramacionService {
         return programacionRepository.findAll();
     }
 
-    public Programacion crearProgramacion(Programacion programacion) throws ResourceAlreadyExistException, ResourceNotFoundException {
-        this.showErrorIfExist(programacion);
-        
+    public Programacion crearProgramacion(Programacion programacion) throws ResourceNotFoundException {
         colegioService.showErrorIfNotExist(programacion.getColegio());
         tallerService.showErrorIfNotExist(programacion.getTaller());
         instructorService.showErrorIfNotExist(programacion.getInstructor());
@@ -77,7 +74,7 @@ public class ProgramacionService {
     }
 
     public void showErrorIfNotExist(Programacion programacion) throws ResourceNotFoundException {
-        if (programacion == null) {
+        if (programacion == null || programacion.getId() == null) {
             throw new ResourceNotFoundException("La programación no existe.");
         }
         showErrorIfNotExist(programacion.getId());
@@ -88,18 +85,6 @@ public class ProgramacionService {
 
         if (programacion.isEmpty()) {
             throw new ResourceNotFoundException("La programación con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Programacion programacion) throws ResourceAlreadyExistException {
-        showErrorIfExist(programacion.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Programacion> programacion = programacionRepository.findById(id);
-
-        if (programacion.isPresent()) {
-            throw new ResourceAlreadyExistException("La programación con id " + id + " ya existe.");
         }
     }
 }

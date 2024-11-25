@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Participante;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.ParticipanteRepository;
@@ -35,8 +34,7 @@ public class ParticipanteService {
         return participanteRepository.findAll();
     }
 
-    public Participante crearParticipante(Participante participante) throws ResourceAlreadyExistException, ResourceNotFoundException {
-        this.showErrorIfExist(participante);
+    public Participante crearParticipante(Participante participante) throws ResourceNotFoundException {
 
         colegioService.showErrorIfNotExist(participante.getColegio());
         tipoDocumentoService.showErrorIfNotExist(participante.getTipoDocumento());
@@ -67,7 +65,7 @@ public class ParticipanteService {
     }
 
     public void showErrorIfNotExist(Participante participante) throws ResourceNotFoundException {
-        if (participante == null) {
+        if (participante == null || participante.getId() == null) {
             throw new ResourceNotFoundException("El participante no existe.");
         }
         showErrorIfNotExist(participante.getId());
@@ -78,18 +76,6 @@ public class ParticipanteService {
 
         if (participante.isEmpty()) {
             throw new ResourceNotFoundException("El participante con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Participante participante) throws ResourceAlreadyExistException {
-        showErrorIfExist(participante.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Participante> participante = participanteRepository.findById(id);
-
-        if (participante.isPresent()) {
-            throw new ResourceAlreadyExistException("El participante con id " + id + " ya existe.");
         }
     }
 }

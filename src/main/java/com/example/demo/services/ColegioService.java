@@ -1,12 +1,9 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Colegio;
-import com.example.demo.entities.Municipio;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.ColegioRepository;
-import com.example.demo.repositories.MunicipioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -34,9 +31,8 @@ public class ColegioService {
     	return colegioRepository.findAll();
     }
     
-    public Colegio crearColegio(Colegio colegio) throws ResourceAlreadyExistException, ResourceNotFoundException {
-    	this.showErrorIfExist(colegio);
-    	municipioService.showErrorIfExist(colegio.getMunicipio());
+    public Colegio crearColegio(Colegio colegio) throws ResourceNotFoundException {
+    	municipioService.showErrorIfNotExist(colegio.getMunicipio());
     	
     	return colegioRepository.save(colegio);
     }
@@ -62,7 +58,7 @@ public class ColegioService {
     }
     
     public void showErrorIfNotExist	(Colegio colegio) throws ResourceNotFoundException {
-    	if(colegio == null) {
+    	if(colegio == null || colegio.getId() == null) {
     		throw new ResourceNotFoundException("El colegio no existe.");
     	}
     	showErrorIfNotExist(colegio.getId());
@@ -75,17 +71,4 @@ public class ColegioService {
     		throw new ResourceNotFoundException("El colegio con id " + id + " no existe.");
     	}
     }
-
-    public void showErrorIfExist(Colegio colegio) throws ResourceAlreadyExistException {
-    	showErrorIfExist(colegio.getId());
-    }
-    
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-    	Optional<Colegio> colegio = colegioRepository.findById(id);
-    	
-    	if(colegio.isPresent()) {
-    		throw new ResourceAlreadyExistException("El colegio con id " + id + " ya existe.");
-    	}
-    }
-    
 }

@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Evidencia;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.EvidenciaRepository;
@@ -32,9 +31,8 @@ public class EvidenciaService {
         return evidenciaRepository.findAll();
     }
 
-    public Evidencia crearEvidencia(Evidencia evidencia) throws ResourceAlreadyExistException, ResourceNotFoundException {
-        this.showErrorIfExist(evidencia);
-
+    public Evidencia crearEvidencia(Evidencia evidencia) throws ResourceNotFoundException {
+    	
         sesionService.showErrorIfNotExist(evidencia.getSesion());
 
         return evidenciaRepository.save(evidencia);
@@ -62,7 +60,7 @@ public class EvidenciaService {
     }
 
     public void showErrorIfNotExist(Evidencia evidencia) throws ResourceNotFoundException {
-        if (evidencia == null) {
+        if (evidencia == null || evidencia.getId() == null) {
             throw new ResourceNotFoundException("La evidencia no existe.");
         }
         showErrorIfNotExist(evidencia.getId());
@@ -73,18 +71,6 @@ public class EvidenciaService {
 
         if (evidencia.isEmpty()) {
             throw new ResourceNotFoundException("La evidencia con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Evidencia evidencia) throws ResourceAlreadyExistException {
-        showErrorIfExist(evidencia.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Evidencia> evidencia = evidenciaRepository.findById(id);
-
-        if (evidencia.isPresent()) {
-            throw new ResourceAlreadyExistException("La evidencia con id " + id + " ya existe.");
         }
     }
 }

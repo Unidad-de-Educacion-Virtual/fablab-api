@@ -1,9 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Asistente;
-import com.example.demo.entities.Sesion;
-import com.example.demo.entities.Participante;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.AsistenteRepository;
@@ -37,8 +34,7 @@ public class AsistenteService {
         return asistenteRepository.findAll();
     }
 
-    public Asistente crearAsistente(Asistente asistente) throws ResourceAlreadyExistException, ResourceNotFoundException {
-        this.showErrorIfExist(asistente);
+    public Asistente crearAsistente(Asistente asistente) throws ResourceNotFoundException {
 
         sesionService.showErrorIfNotExist(asistente.getSesion());
         participanteService.showErrorIfNotExist(asistente.getParticipante());
@@ -69,7 +65,7 @@ public class AsistenteService {
     }
 
     public void showErrorIfNotExist(Asistente asistente) throws ResourceNotFoundException {
-        if (asistente == null) {
+        if (asistente == null || asistente.getId() == null) {
             throw new ResourceNotFoundException("El asistente no existe.");
         }
         showErrorIfNotExist(asistente.getId());
@@ -80,18 +76,6 @@ public class AsistenteService {
 
         if (asistente.isEmpty()) {
             throw new ResourceNotFoundException("El asistente con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Asistente asistente) throws ResourceAlreadyExistException {
-        showErrorIfExist(asistente.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Asistente> asistente = asistenteRepository.findById(id);
-
-        if (asistente.isPresent()) {
-            throw new ResourceAlreadyExistException("El asistente con id " + id + " ya existe.");
         }
     }
 }

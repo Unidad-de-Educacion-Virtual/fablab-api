@@ -2,7 +2,6 @@ package com.example.demo.services;
 
 import com.example.demo.entities.Colegio;
 import com.example.demo.entities.Taller;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.TallerRepository;
@@ -31,8 +30,7 @@ public class TallerService {
         return tallerRepository.findAll();
     }
 
-    public Taller crearTaller(Taller taller) throws ResourceAlreadyExistException {
-        this.showErrorIfExist(taller);
+    public Taller crearTaller(Taller taller) {
         return tallerRepository.save(taller);
     }
 
@@ -55,7 +53,7 @@ public class TallerService {
     }
 
     public void showErrorIfNotExist	(Taller taller) throws ResourceNotFoundException {
-    	if(taller == null) {
+    	if(taller == null || taller.getId() == null) {
     		throw new ResourceNotFoundException("El taller no existe.");
     	}
     	showErrorIfNotExist(taller.getId());
@@ -69,15 +67,4 @@ public class TallerService {
         }
     }
 
-    public void showErrorIfExist(Taller taller) throws ResourceAlreadyExistException {
-        showErrorIfExist(taller.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Taller> taller = tallerRepository.findById(id);
-        
-        if (taller.isPresent()) {
-            throw new ResourceAlreadyExistException("El taller con id " + id + " ya existe.");
-        }
-    }
 }

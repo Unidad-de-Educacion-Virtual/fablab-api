@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ProgramacionMiniumDTO {
     private Long id;
-    private String valor;
+    private String valor = "";
 
     public static ProgramacionMiniumDTO fromEntity(Programacion programacion) {
         ProgramacionMiniumDTO programacionDTO = new ProgramacionMiniumDTO();

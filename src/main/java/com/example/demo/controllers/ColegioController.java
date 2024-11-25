@@ -33,7 +33,7 @@ public class ColegioController {
     }
 
     @PostMapping
-    public ResponseEntity<ColegioDTO> crearColegio(@RequestBody ColegioRequestDTO colegioRequestDTO) {
+    public ResponseEntity<ColegioDTO> crearColegio(@RequestBody ColegioRequestDTO colegioRequestDTO) throws ResourceNotFoundException {
         Colegio colegio = colegioRequestDTO.toEntity();
         colegio = colegioService.crearColegio(colegio);
         return ResponseEntity.status(201).body(ColegioDTO.fromEntity(colegio));

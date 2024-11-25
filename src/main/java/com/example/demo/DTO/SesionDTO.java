@@ -17,6 +17,7 @@ public class SesionDTO {
     private ProgramacionMiniumDTO programacion;
     private InstructorMiniumDTO instructor;
     private UbicacionDTO ubicacion;
+    private Integer totalAsistentes;
 
     public static SesionDTO fromEntity(Sesion sesion) {
         SesionDTO sesionDTO = new SesionDTO();

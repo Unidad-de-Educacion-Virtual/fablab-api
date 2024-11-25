@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Ubicacion;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.UbicacionRepository;
@@ -30,8 +29,7 @@ public class UbicacionService {
         return ubicacionRepository.findAll();
     }
 
-    public Ubicacion crearUbicacion(Ubicacion ubicacion) throws ResourceAlreadyExistException {
-        this.showErrorIfExist(ubicacion);
+    public Ubicacion crearUbicacion(Ubicacion ubicacion) {
         return ubicacionRepository.save(ubicacion);
     }
 
@@ -54,7 +52,7 @@ public class UbicacionService {
     }
 
     public void showErrorIfNotExist(Ubicacion ubicacion) throws ResourceNotFoundException {
-        if (ubicacion == null) {
+        if (ubicacion == null || ubicacion.getId() == null) {
             throw new ResourceNotFoundException("La ubicacion no existe.");
         }
         showErrorIfNotExist(ubicacion.getId());
@@ -65,18 +63,6 @@ public class UbicacionService {
         
         if (ubicacion.isEmpty()) {
             throw new ResourceNotFoundException("La ubicacion con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Ubicacion ubicacion) throws ResourceAlreadyExistException {
-        showErrorIfExist(ubicacion.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Ubicacion> ubicacion = ubicacionRepository.findById(id);
-        
-        if (ubicacion.isPresent()) {
-            throw new ResourceAlreadyExistException("La ubicacion con id " + id + " ya existe.");
         }
     }
 }

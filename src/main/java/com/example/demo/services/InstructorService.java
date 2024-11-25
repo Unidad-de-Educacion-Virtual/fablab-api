@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Instructor;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.InstructorRepository;
@@ -30,8 +29,7 @@ public class InstructorService {
         return instructorRepository.findAll();
     }
 
-    public Instructor crearInstructor(Instructor instructor) throws ResourceAlreadyExistException {
-        this.showErrorIfExist(instructor);
+    public Instructor crearInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
 
@@ -54,7 +52,7 @@ public class InstructorService {
     }
 
     public void showErrorIfNotExist(Instructor instructor) throws ResourceNotFoundException {
-        if (instructor == null) {
+        if (instructor == null || instructor.getId() == null) {
             throw new ResourceNotFoundException("El instructor no existe.");
         }
         showErrorIfNotExist(instructor.getId());
@@ -65,18 +63,6 @@ public class InstructorService {
         
         if (instructor.isEmpty()) {
             throw new ResourceNotFoundException("El instructor con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Instructor instructor) throws ResourceAlreadyExistException {
-        showErrorIfExist(instructor.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Instructor> instructor = instructorRepository.findById(id);
-        
-        if (instructor.isPresent()) {
-            throw new ResourceAlreadyExistException("El instructor con id " + id + " ya existe.");
         }
     }
 }

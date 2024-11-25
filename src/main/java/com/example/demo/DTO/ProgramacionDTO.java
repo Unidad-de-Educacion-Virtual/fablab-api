@@ -32,7 +32,6 @@ public class ProgramacionDTO {
         programacionDTO.setGrado(programacion.getGrado());
         programacionDTO.setGrupo(programacion.getGrupo());
 
-        // Mapear relaciones a sus respectivos DTOs
         if (programacion.getColegio() != null) {
             programacionDTO.setColegio(ColegioMiniumDTO.fromEntity(programacion.getColegio()));
         }

@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Municipio;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.MunicipioRepository;
@@ -28,8 +27,7 @@ public class MunicipioService {
         return municipioRepository.findAll();
     }
 
-    public Municipio crearMunicipio(Municipio municipio) throws ResourceAlreadyExistException {
-        this.showErrorIfExist(municipio);
+    public Municipio crearMunicipio(Municipio municipio) {
         return municipioRepository.save(municipio);
     }
 
@@ -53,7 +51,7 @@ public class MunicipioService {
     }
 
     public void showErrorIfNotExist(Municipio municipio) throws ResourceNotFoundException {
-        if (municipio == null) {
+        if (municipio == null || municipio.getId() == null) {
             throw new ResourceNotFoundException("El municipio no existe.");
         }
         this.showErrorIfNotExist(municipio.getId());
@@ -63,19 +61,6 @@ public class MunicipioService {
         Optional<Municipio> municipio = municipioRepository.findById(id);
         if (municipio.isEmpty()) {
             throw new ResourceNotFoundException("El municipio con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(Municipio municipio) throws ResourceAlreadyExistException {
-        if (municipio != null && municipio.getId() != null) {
-            this.showErrorIfExist(municipio.getId());
-        }
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<Municipio> municipio = municipioRepository.findById(id);
-        if (municipio.isPresent()) {
-            throw new ResourceAlreadyExistException("El municipio con id " + id + " ya existe.");
         }
     }
 }

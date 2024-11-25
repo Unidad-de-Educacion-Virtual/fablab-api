@@ -12,23 +12,20 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex, WebRequest request) {
+    	ex.printStackTrace();
         return new ResponseEntity<>(createErrorResponse("Ocurrió un error inesperado: " + ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
+    	ex.printStackTrace();
         return new ResponseEntity<>(createErrorResponse("Error en la ejecución: " + ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(createErrorResponse("Recurso no encontrado: " + ex.getMessage()), HttpStatus.NOT_FOUND);
-    }
-    
-    @ExceptionHandler(ResourceAlreadyExistException.class)
-    public ResponseEntity<Object> handleResourceAlreadyExistException(ResourceAlreadyExistException ex, WebRequest request) {
-        return new ResponseEntity<>(createErrorResponse("Recurso no ya existente: " + ex.getMessage()), HttpStatus.NOT_FOUND);
     }
     
     @ExceptionHandler(ResourceReferencedByOthersException.class)

@@ -1,7 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.TipoDocumento;
-import com.example.demo.exceptions.ResourceAlreadyExistException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.TipoDocumentoRepository;
@@ -29,8 +28,7 @@ public class TipoDocumentoService {
         return tipoDocumentoRepository.findAll();
     }
 
-    public TipoDocumento crearTipoDocumento(TipoDocumento tipoDocumento) throws ResourceAlreadyExistException {
-        this.showErrorIfExist(tipoDocumento);
+    public TipoDocumento crearTipoDocumento(TipoDocumento tipoDocumento) {
         return tipoDocumentoRepository.save(tipoDocumento);
     }
 
@@ -53,7 +51,7 @@ public class TipoDocumentoService {
     }
 
     public void showErrorIfNotExist(TipoDocumento tipoDocumento) throws ResourceNotFoundException {
-        if (tipoDocumento == null) {
+        if (tipoDocumento == null || tipoDocumento.getId() == null) {
             throw new ResourceNotFoundException("El tipo de documento no existe.");
         }
         showErrorIfNotExist(tipoDocumento.getId());
@@ -64,18 +62,6 @@ public class TipoDocumentoService {
         
         if (tipoDocumento.isEmpty()) {
             throw new ResourceNotFoundException("El tipo de documento con id " + id + " no existe.");
-        }
-    }
-
-    public void showErrorIfExist(TipoDocumento tipoDocumento) throws ResourceAlreadyExistException {
-        showErrorIfExist(tipoDocumento.getId());
-    }
-
-    public void showErrorIfExist(Long id) throws ResourceAlreadyExistException {
-        Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
-        
-        if (tipoDocumento.isPresent()) {
-            throw new ResourceAlreadyExistException("El tipo de documento con id " + id + " ya existe.");
         }
     }
 }
