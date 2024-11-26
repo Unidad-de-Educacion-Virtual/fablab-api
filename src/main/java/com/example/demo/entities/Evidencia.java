@@ -23,5 +23,5 @@ public class Evidencia {
     private String url;
     
     @Column
-    private LocalDate fecha;
+    private LocalDate fecha = LocalDate.now();
 }

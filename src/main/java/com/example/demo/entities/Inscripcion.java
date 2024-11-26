@@ -24,6 +24,6 @@ public class Inscripcion {
     @JsonIgnore
     private Programacion programacion;
 
-    private LocalDate fecha;
+    private LocalDate fecha = LocalDate.now();
 
 }
