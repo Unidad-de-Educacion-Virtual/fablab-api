@@ -19,4 +19,7 @@ public class Evidencia {
 
     @Column
     private String url;
+    
+    @Column
+    private LocalDate fecha;
 }

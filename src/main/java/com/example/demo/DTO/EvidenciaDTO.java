@@ -14,12 +14,14 @@ public class EvidenciaDTO {
     private SesionMiniumDTO sesion;
     private String observacion;
     private String url;
+    private String fecha;
 
     public static EvidenciaDTO fromEntity(Evidencia evidencia) {
         EvidenciaDTO evidenciaDTO = new EvidenciaDTO();
         evidenciaDTO.setId(evidencia.getId());
         evidenciaDTO.setObservacion(evidencia.getObservacion());
         evidenciaDTO.setUrl(evidencia.getUrl());
+        evidenciaDTO.setFecha(evidencia.getFecha().toString());
 
         if (evidencia.getSesion() != null) {
             evidenciaDTO.setSesion(SesionMiniumDTO.fromEntity(evidencia.getSesion()));
