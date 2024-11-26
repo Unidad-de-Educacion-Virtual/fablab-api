@@ -78,4 +78,8 @@ public class AsistenteService {
             throw new ResourceNotFoundException("El asistente con id " + id + " no existe.");
         }
     }
+
+	public List<Asistente> listarAsistentesPorSesion(Long sesionId) {
+		return asistenteRepository.findBySesionId(sesionId);
+	}
 }

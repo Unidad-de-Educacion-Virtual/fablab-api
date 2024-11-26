@@ -21,9 +21,15 @@ public class AsistenteController {
     private AsistenteService asistenteService;
 
     @GetMapping
-    public ResponseEntity<List<AsistenteDTO>> listarAsistentes() {
-        List<Asistente> asistentes = asistenteService.listarAsistentes();
-        return ResponseEntity.ok(AsistenteDTO.fromEntity(asistentes));
+    public ResponseEntity<List<AsistenteDTO>> listarAsistentes(@RequestParam(required = false) Long sesionId) {
+        if(sesionId!=null){
+        	List<Asistente> asistentes = asistenteService.listarAsistentesPorSesion(sesionId);
+            return ResponseEntity.ok(AsistenteDTO.fromEntity(asistentes));
+        }else {
+        	List<Asistente> asistentes = asistenteService.listarAsistentes();
+            return ResponseEntity.ok(AsistenteDTO.fromEntity(asistentes));
+        }
+    	
     }
 
     @GetMapping("/{id}")

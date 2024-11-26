@@ -32,4 +32,6 @@ public class Sesion {
     @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL)
     private List<Asistente> asistentes; 
     
+    @OneToMany(mappedBy = "sesion",cascade = CascadeType.ALL)
+    private List<Evidencia> evidencias;
 }

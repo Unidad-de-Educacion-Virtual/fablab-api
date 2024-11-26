@@ -21,9 +21,14 @@ public class EvidenciaController {
     private EvidenciaService evidenciaService;
 
     @GetMapping
-    public ResponseEntity<List<EvidenciaDTO>> listarEvidencias() {
-        List<Evidencia> evidencias = evidenciaService.listarEvidencias();
-        return ResponseEntity.ok(EvidenciaDTO.fromEntity(evidencias));
+    public ResponseEntity<List<EvidenciaDTO>> listarEvidencias(@RequestParam(required = false) Long sesionId) {
+    	if(sesionId!=null) {
+    		List<Evidencia> evidencias = evidenciaService.listarEvidenciasPorSesion(sesionId);
+            return ResponseEntity.ok(EvidenciaDTO.fromEntity(evidencias));
+    	}else{
+    		List<Evidencia> evidencias = evidenciaService.listarEvidencias();
+            return ResponseEntity.ok(EvidenciaDTO.fromEntity(evidencias));
+    	}
     }
 
     @GetMapping("/{id}")

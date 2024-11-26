@@ -73,4 +73,8 @@ public class EvidenciaService {
             throw new ResourceNotFoundException("La evidencia con id " + id + " no existe.");
         }
     }
+
+	public List<Evidencia> listarEvidenciasPorSesion(Long sesionId) {
+		return evidenciaRepository.findBySesionId(sesionId);
+	}
 }
