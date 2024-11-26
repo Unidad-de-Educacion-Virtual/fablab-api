@@ -24,8 +24,15 @@ public class ProgramacionDTO {
     public static ProgramacionDTO fromEntity(Programacion programacion) {
         ProgramacionDTO programacionDTO = new ProgramacionDTO();
         programacionDTO.setId(programacion.getId());
-        programacionDTO.setFechaInicio(programacion.getFechaInicio().toString());
-        programacionDTO.setFechaFin(programacion.getFechaFin().toString());
+        
+        if(programacion.getFechaInicio() != null) {
+        	programacionDTO.setFechaInicio(programacion.getFechaInicio().toString());
+        }
+        
+        if(programacion.getFechaFin() != null) {
+        	programacionDTO.setFechaFin(programacion.getFechaFin().toString());
+        }
+        
         programacionDTO.setCantidad(programacion.getCantidad());
         programacionDTO.setObservacion(programacion.getObservacion());
         programacionDTO.setGrado(programacion.getGrado());

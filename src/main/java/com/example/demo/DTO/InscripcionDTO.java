@@ -17,7 +17,10 @@ public class InscripcionDTO {
     public static InscripcionDTO fromEntity(Inscripcion inscripcion) {
         InscripcionDTO inscripcionDTO = new InscripcionDTO();
         inscripcionDTO.setId(inscripcion.getId());
-        inscripcionDTO.setFecha(inscripcion.getFecha().toString());
+        
+        if(inscripcion.getFecha() != null) {
+        	inscripcionDTO.setFecha(inscripcion.getFecha().toString());
+        }
 
         if (inscripcion.getParticipante() != null) {
             inscripcionDTO.setParticipante(ParticipanteMiniumDTO.fromEntity(inscripcion.getParticipante()));

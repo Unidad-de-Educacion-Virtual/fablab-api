@@ -21,7 +21,10 @@ public class EvidenciaDTO {
         evidenciaDTO.setId(evidencia.getId());
         evidenciaDTO.setObservacion(evidencia.getObservacion());
         evidenciaDTO.setUrl(evidencia.getUrl());
-        evidenciaDTO.setFecha(evidencia.getFecha().toString());
+        
+        if(evidencia.getFecha() != null) {
+        	 evidenciaDTO.setFecha(evidencia.getFecha().toString());
+        }
 
         if (evidencia.getSesion() != null) {
             evidenciaDTO.setSesion(SesionMiniumDTO.fromEntity(evidencia.getSesion()));
