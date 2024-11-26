@@ -12,8 +12,8 @@ import lombok.Data;
 @Data
 public class SesionDTO {
     private Long id;
-    private LocalDate fecha;
-    private LocalTime hora;
+    private String fecha;
+    private String hora;
     private ProgramacionMiniumDTO programacion;
     private InstructorMiniumDTO instructor;
     private UbicacionDTO ubicacion;
@@ -22,8 +22,14 @@ public class SesionDTO {
     public static SesionDTO fromEntity(Sesion sesion) {
         SesionDTO sesionDTO = new SesionDTO();
         sesionDTO.setId(sesion.getId());
-        sesionDTO.setFecha(sesion.getFecha());
-        sesionDTO.setHora(sesion.getHora());
+        
+        if(sesion.getFecha() != null) {
+        	sesionDTO.setFecha(sesion.getFecha().toString());
+        }
+        
+        if(sesion.getHora() != null) {
+        	 sesionDTO.setHora(sesion.getHora().toString());
+        }
 
         if (sesion.getProgramacion() != null) {
             sesionDTO.setProgramacion(ProgramacionMiniumDTO.fromEntity(sesion.getProgramacion()));

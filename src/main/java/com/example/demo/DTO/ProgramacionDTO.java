@@ -1,6 +1,5 @@
 package com.example.demo.DTO;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,8 @@ public class ProgramacionDTO {
     private Long id;
     private ColegioMiniumDTO colegio;
     private TallerMiniumDTO taller;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFin;
+    private String fechaInicio;
+    private String fechaFin;
     private Integer cantidad;
     private String observacion;
     private InstructorMiniumDTO instructor;
@@ -25,8 +24,15 @@ public class ProgramacionDTO {
     public static ProgramacionDTO fromEntity(Programacion programacion) {
         ProgramacionDTO programacionDTO = new ProgramacionDTO();
         programacionDTO.setId(programacion.getId());
-        programacionDTO.setFechaInicio(programacion.getFechaInicio());
-        programacionDTO.setFechaFin(programacion.getFechaFin());
+        
+        if(programacion.getFechaInicio() != null) {
+        	programacionDTO.setFechaInicio(programacion.getFechaInicio().toString());
+        }
+        
+        if(programacion.getFechaFin() != null) {
+        	programacionDTO.setFechaFin(programacion.getFechaFin().toString());
+        }
+        
         programacionDTO.setCantidad(programacion.getCantidad());
         programacionDTO.setObservacion(programacion.getObservacion());
         programacionDTO.setGrado(programacion.getGrado());

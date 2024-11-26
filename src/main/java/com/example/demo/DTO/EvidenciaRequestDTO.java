@@ -12,6 +12,7 @@ public class EvidenciaRequestDTO {
     private Long sesionId;
     private String observacion;
     private String url;
+    private LocalDate fecha;
 
     public Evidencia toEntity() {
         Evidencia evidencia = new Evidencia();
@@ -24,7 +25,8 @@ public class EvidenciaRequestDTO {
 
         evidencia.setObservacion(this.observacion);
         evidencia.setUrl(this.url);
-
+        evidencia.setFecha(this.fecha);
+        
         return evidencia;
     }
 }

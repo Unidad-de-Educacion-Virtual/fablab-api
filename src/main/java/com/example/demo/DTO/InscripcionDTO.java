@@ -1,6 +1,5 @@
 package com.example.demo.DTO;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +12,15 @@ public class InscripcionDTO {
     private Long id;
     private ParticipanteMiniumDTO participante;
     private ProgramacionMiniumDTO programacion;
-    private LocalDate fecha;
+    private String fecha;
 
     public static InscripcionDTO fromEntity(Inscripcion inscripcion) {
         InscripcionDTO inscripcionDTO = new InscripcionDTO();
         inscripcionDTO.setId(inscripcion.getId());
-        inscripcionDTO.setFecha(inscripcion.getFecha());
+        
+        if(inscripcion.getFecha() != null) {
+        	inscripcionDTO.setFecha(inscripcion.getFecha().toString());
+        }
 
         if (inscripcion.getParticipante() != null) {
             inscripcionDTO.setParticipante(ParticipanteMiniumDTO.fromEntity(inscripcion.getParticipante()));
