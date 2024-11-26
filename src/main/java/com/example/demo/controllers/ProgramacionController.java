@@ -21,9 +21,14 @@ public class ProgramacionController {
     private ProgramacionService programacionService;
 
     @GetMapping
-    public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones() {
+    public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones(@RequestParam(required = false) Long tallerId) {
+    	if(tallerId!=null) {
+    		 List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
+    	        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+    	}else {
         List<Programacion> programaciones = programacionService.listarProgramaciones();
         return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+    	}
     }
 
     @GetMapping("/{id}")
@@ -55,9 +60,5 @@ public class ProgramacionController {
         return ResponseEntity.ok(ProgramacionDTO.fromEntity(programacion));
     }
     
-    @GetMapping("/taller/{tallerId}")
-    public ResponseEntity<List<ProgramacionDTO>> listarProgramacionesPorTaller(@PathVariable Long tallerId) {
-        List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
-        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
-    }
+    
 }
