@@ -39,7 +39,7 @@ public class SesionDTO {
         if (sesion.getUbicacion() != null) {
             sesionDTO.setUbicacion(UbicacionDTO.fromEntity(sesion.getUbicacion()));
         }
-
+        sesionDTO.setTotalAsistentes(sesion.getAsistentes() != null ? sesion.getAsistentes().size() : 0);
         return sesionDTO;
     }
 

@@ -20,10 +20,19 @@ public class SesionController {
     @Autowired
     private SesionService sesionService;
 
+    
     @GetMapping
-    public ResponseEntity<List<SesionDTO>> listarSesiones() {
-        List<Sesion> sesiones = sesionService.listarSesiones();
-        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
+    public ResponseEntity<List<SesionDTO>> listarSesiones(@RequestParam(required = false) Long programacionId) {
+        if (programacionId!=null) {
+        	List<Sesion> sesiones = sesionService.listarSesionesPorProgramacion(programacionId);
+	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
+		} else {
+	    	List<Sesion> sesiones = sesionService.listarSesiones();
+	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
+		}
+        
+        
+    	
     }
 
     @GetMapping("/{id}")

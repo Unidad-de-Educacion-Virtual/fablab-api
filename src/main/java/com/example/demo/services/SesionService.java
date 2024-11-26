@@ -83,4 +83,8 @@ public class SesionService {
             throw new ResourceNotFoundException("La sesión con id " + id + " no existe.");
         }
     }
+
+	public List<Sesion> listarSesionesPorProgramacion(Long programacionId) throws ResourceNotFoundException{
+		return sesionRepository.findByProgramacionId(programacionId);
+	}
 }

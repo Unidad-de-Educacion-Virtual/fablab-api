@@ -91,4 +91,5 @@ public class ProgramacionService {
     public List<Programacion> listarProgramacionesPorTaller(Long tallerId) throws ResourceNotFoundException {
         return programacionRepository.findByTallerId(tallerId);
     }
+    
 }

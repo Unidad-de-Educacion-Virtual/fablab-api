@@ -1,6 +1,8 @@
 package com.example.demo.entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,5 +28,8 @@ public class Sesion {
     @ManyToOne
     @JoinColumn(name = "ubicacion_id", nullable = false)
     private Ubicacion ubicacion;
-
+    
+    @OneToMany(mappedBy = "sesion", cascade = CascadeType.ALL)
+    private List<Asistente> asistentes; 
+    
 }
