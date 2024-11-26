@@ -1,11 +1,13 @@
 package com.example.demo.controllers;
+
 import com.example.demo.DTO.TallerDTO;
 import com.example.demo.DTO.TallerRequestDTO;
 import com.example.demo.entities.Taller;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.services.TallerService;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,49 +17,39 @@ import java.util.List;
 @RequestMapping("/api/taller")
 public class TallerController {
 
-    private final TallerService tallerService;
-
-    public TallerController(TallerService tallerService) {
-        this.tallerService = tallerService;
-    }
+    @Autowired
+    private TallerService tallerService;
 
     @GetMapping
-    public List<Taller> listarTaller() {
-        return tallerService.listarTaller();
+    public ResponseEntity<List<TallerDTO>> listarTalleres() {
+        List<Taller> talleres = tallerService.listarTalleres();
+        return ResponseEntity.ok(TallerDTO.fromEntity(talleres));
     }
-    
+
     @GetMapping("/{id}")
-    public TallerDTO getTaller(@PathVariable Long id) throws Exception {
-        try {
-        	Taller taller = tallerService.buscarTaller(id);
-        	return new TallerDTO(taller.getId(), taller.getNombre(), taller.getDescripcion());
-		} catch (Exception e) {
-			throw new ResourceNotFoundException("El taller con id " + id + " no existe.");
-		}
+    public ResponseEntity<TallerDTO> obtenerTaller(@PathVariable Long id) throws ResourceNotFoundException {
+        Taller taller = tallerService.buscarTaller(id);
+        return ResponseEntity.ok(TallerDTO.fromEntity(taller));
     }
-   
+
     @PostMapping
-    public ResponseEntity<Taller> crearTaller(@RequestBody TallerRequestDTO tallerRequestDTO) {
-        Taller taller = new Taller();
-        taller.setNombre(tallerRequestDTO.getNombre());
-        taller.setDescripcion(tallerRequestDTO.getDescripcion());
-        return ResponseEntity.ok(tallerService.crearTaller(taller));
+    public ResponseEntity<TallerDTO> crearTaller(@RequestBody TallerRequestDTO tallerRequestDTO) throws ResourceNotFoundException {
+        Taller taller = tallerRequestDTO.toEntity();
+        taller = tallerService.crearTaller(taller);
+        return ResponseEntity.status(201).body(TallerDTO.fromEntity(taller));
     }
 
-   
     @PutMapping("/{id}")
-    public ResponseEntity<Taller> actualizarTaller(@PathVariable Long id, @RequestBody TallerRequestDTO tallerRequestDTO) {
-        return tallerService.actualizarTaller(id, tallerRequestDTO.getNombre(), tallerRequestDTO.getDescripcion())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TallerDTO> actualizarTaller(@PathVariable Long id, @RequestBody TallerRequestDTO tallerRequestDTO) throws ResourceNotFoundException {
+        Taller taller = tallerRequestDTO.toEntity();
+        taller.setId(id);
+        taller = tallerService.actualizarTaller(taller);
+        return ResponseEntity.ok(TallerDTO.fromEntity(taller));
     }
-
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Taller> eliminarTaller(@PathVariable Long id) {
-        return tallerService.eliminarTaller(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TallerDTO> eliminarTaller(@PathVariable Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
+        Taller taller = tallerService.eliminarTaller(id);
+        return ResponseEntity.ok(TallerDTO.fromEntity(taller));
     }
-
 }

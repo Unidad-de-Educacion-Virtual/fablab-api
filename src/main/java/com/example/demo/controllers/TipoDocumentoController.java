@@ -4,8 +4,10 @@ import com.example.demo.DTO.TipoDocumentoDTO;
 import com.example.demo.DTO.TipoDocumentoRequestDTO;
 import com.example.demo.entities.TipoDocumento;
 import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.services.TipoDocumentoService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,47 +17,39 @@ import java.util.List;
 @RequestMapping("/api/tipo-documento")
 public class TipoDocumentoController {
 
-    private final TipoDocumentoService tipoDocumentoService;
-
-    public TipoDocumentoController(TipoDocumentoService tipoDocumentoService) {
-        this.tipoDocumentoService = tipoDocumentoService;
-    }
+    @Autowired
+    private TipoDocumentoService tipoDocumentoService;
 
     @GetMapping
-    public List<TipoDocumento> listarTipoDocumento() {
-        return tipoDocumentoService.listarTipoDocumento();
+    public ResponseEntity<List<TipoDocumentoDTO>> listarTiposDocumento() {
+        List<TipoDocumento> tiposDocumento = tipoDocumentoService.listarTipoDocumentos();
+        return ResponseEntity.ok(TipoDocumentoDTO.fromEntity(tiposDocumento));
     }
-    
+
     @GetMapping("/{id}")
-    public TipoDocumentoDTO getTipoDocumento(@PathVariable Long id) throws Exception {
-        try {
-            TipoDocumento tipoDocumento = tipoDocumentoService.buscarTipoDocumento(id);
-            return new TipoDocumentoDTO(tipoDocumento.getId(), tipoDocumento.getDescripcion());
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("El tipo de documento con id " + id + " no existe.");
-        }
+    public ResponseEntity<TipoDocumentoDTO> obtenerTipoDocumento(@PathVariable Long id) throws ResourceNotFoundException {
+        TipoDocumento tipoDocumento = tipoDocumentoService.buscarTipoDocumento(id);
+        return ResponseEntity.ok(TipoDocumentoDTO.fromEntity(tipoDocumento));
     }
 
     @PostMapping
-    public ResponseEntity<TipoDocumento> crearTipoDocumento(@RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) {
-        TipoDocumento tipoDocumento = new TipoDocumento();
-        tipoDocumento.setDescripcion(tipoDocumentoRequestDTO.getDescripcion());
-        return ResponseEntity.ok(tipoDocumentoService.crearTipoDocumento(tipoDocumento));
+    public ResponseEntity<TipoDocumentoDTO> crearTipoDocumento(@RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) throws ResourceNotFoundException {
+        TipoDocumento tipoDocumento = tipoDocumentoRequestDTO.toEntity();
+        tipoDocumento = tipoDocumentoService.crearTipoDocumento(tipoDocumento);
+        return ResponseEntity.status(201).body(TipoDocumentoDTO.fromEntity(tipoDocumento));
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<TipoDocumento> actualizarTipoDocumento(@PathVariable Long id, @RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) {
-        return tipoDocumentoService.actualizarTipoDocumento(id, tipoDocumentoRequestDTO.getDescripcion())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TipoDocumentoDTO> actualizarTipoDocumento(@PathVariable Long id, @RequestBody TipoDocumentoRequestDTO tipoDocumentoRequestDTO) throws ResourceNotFoundException {
+        TipoDocumento tipoDocumento = tipoDocumentoRequestDTO.toEntity();
+        tipoDocumento.setId(id);
+        tipoDocumento = tipoDocumentoService.actualizarTipoDocumento(tipoDocumento);
+        return ResponseEntity.ok(TipoDocumentoDTO.fromEntity(tipoDocumento));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TipoDocumento> eliminarTipoDocumento(@PathVariable Long id) {
-        return tipoDocumentoService.eliminarTipoDocumento(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<TipoDocumentoDTO> eliminarTipoDocumento(@PathVariable Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
+        TipoDocumento tipoDocumento = tipoDocumentoService.eliminarTipoDocumento(id);
+        return ResponseEntity.ok(TipoDocumentoDTO.fromEntity(tipoDocumento));
     }
-
 }

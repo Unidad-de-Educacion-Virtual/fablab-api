@@ -1,7 +1,11 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Municipio;
+import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.MunicipioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,14 +14,13 @@ import java.util.Optional;
 @Service
 public class MunicipioService {
 
-    private final MunicipioRepository municipioRepository;
+    @Autowired
+    private MunicipioRepository municipioRepository;
 
-    public MunicipioService(MunicipioRepository municipioRepository) {
-        this.municipioRepository = municipioRepository;
-    }
-
-    public Municipio buscarMunicipio(long id) {
-        return municipioRepository.getReferenceById(id);
+    public Municipio buscarMunicipio(Long id) throws ResourceNotFoundException {
+        this.showErrorIfNotExist(id);
+        Optional<Municipio> municipio = municipioRepository.findById(id);
+        return municipio.get();
     }
 
     public List<Municipio> listarMunicipios() {
@@ -28,20 +31,36 @@ public class MunicipioService {
         return municipioRepository.save(municipio);
     }
 
-    public Optional<Municipio> actualizarMunicipio(Long id, String nombre, String dane) {
-        return municipioRepository.findById(id).map(municipio -> {
-            municipio.setNombre(nombre);
-            municipio.setDane(dane);
-            return municipioRepository.save(municipio);
-        });
+    public Municipio actualizarMunicipio(Municipio municipio) throws ResourceNotFoundException {
+        this.showErrorIfNotExist(municipio);
+        return municipioRepository.save(municipio);
     }
 
 
-    public Optional<Municipio> eliminarMunicipio(Long id) {
-        return municipioRepository.findById(id).map(municipio -> {
-            municipioRepository.delete(municipio);
-            return municipio;
-        });
+    public Municipio eliminarMunicipio(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
+        this.showErrorIfNotExist(id);
+        Optional<Municipio> municipio = municipioRepository.findById(id);
+
+        try {
+            municipioRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceReferencedByOthersException("El municipio está referenciado por otras entidades y no se puede eliminar.");
+        }
+
+        return municipio.get();
     }
 
+    public void showErrorIfNotExist(Municipio municipio) throws ResourceNotFoundException {
+        if (municipio == null || municipio.getId() == null) {
+            throw new ResourceNotFoundException("El municipio no existe.");
+        }
+        this.showErrorIfNotExist(municipio.getId());
+    }
+
+    public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
+        Optional<Municipio> municipio = municipioRepository.findById(id);
+        if (municipio.isEmpty()) {
+            throw new ResourceNotFoundException("El municipio con id " + id + " no existe.");
+        }
+    }
 }

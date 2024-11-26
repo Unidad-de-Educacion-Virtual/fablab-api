@@ -1,7 +1,12 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.TipoDocumento;
+import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.TipoDocumentoRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,17 +15,16 @@ import java.util.Optional;
 @Service
 public class TipoDocumentoService {
 
-    private final TipoDocumentoRepository tipoDocumentoRepository;
+    @Autowired
+    private TipoDocumentoRepository tipoDocumentoRepository;
 
-    public TipoDocumentoService(TipoDocumentoRepository tipoDocumentoRepository) {
-        this.tipoDocumentoRepository = tipoDocumentoRepository;
+    public TipoDocumento buscarTipoDocumento(Long id) throws ResourceNotFoundException {
+        this.showErrorIfNotExist(id);
+        Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
+        return tipoDocumento.get();
     }
 
-    public TipoDocumento buscarTipoDocumento(long id) {
-        return tipoDocumentoRepository.getReferenceById(id);
-    }
-
-    public List<TipoDocumento> listarTipoDocumento() {
+    public List<TipoDocumento> listarTipoDocumentos() {
         return tipoDocumentoRepository.findAll();
     }
 
@@ -28,19 +32,36 @@ public class TipoDocumentoService {
         return tipoDocumentoRepository.save(tipoDocumento);
     }
 
-    public Optional<TipoDocumento> actualizarTipoDocumento(Long id, String descripcion) {
-        return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
-            tipoDocumento.setDescripcion(descripcion);
-            return tipoDocumentoRepository.save(tipoDocumento);
-        });
+    public TipoDocumento actualizarTipoDocumento(TipoDocumento tipoDocumento) throws ResourceNotFoundException {
+        this.showErrorIfNotExist(tipoDocumento.getId());
+        return tipoDocumentoRepository.save(tipoDocumento);
     }
 
-
-    public Optional<TipoDocumento> eliminarTipoDocumento(Long id) {
-        return tipoDocumentoRepository.findById(id).map(tipoDocumento -> {
-            tipoDocumentoRepository.delete(tipoDocumento);
-            return tipoDocumento;
-        });
+    public TipoDocumento eliminarTipoDocumento(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
+        this.showErrorIfNotExist(id);
+        Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
+        
+        try {
+            tipoDocumentoRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResourceReferencedByOthersException("El tipo de documento no se puede eliminar porque está siendo utilizado en otras entidades.");
+        }
+        
+        return tipoDocumento.get();
     }
 
+    public void showErrorIfNotExist(TipoDocumento tipoDocumento) throws ResourceNotFoundException {
+        if (tipoDocumento == null || tipoDocumento.getId() == null) {
+            throw new ResourceNotFoundException("El tipo de documento no existe.");
+        }
+        showErrorIfNotExist(tipoDocumento.getId());
+    }
+
+    public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
+        Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
+        
+        if (tipoDocumento.isEmpty()) {
+            throw new ResourceNotFoundException("El tipo de documento con id " + id + " no existe.");
+        }
+    }
 }
