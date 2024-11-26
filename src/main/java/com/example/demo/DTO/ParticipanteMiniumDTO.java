@@ -1,7 +1,6 @@
 package com.example.demo.DTO;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import com.example.demo.entities.Participante;
 

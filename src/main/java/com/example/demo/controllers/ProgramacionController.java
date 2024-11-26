@@ -54,4 +54,10 @@ public class ProgramacionController {
         Programacion programacion = programacionService.eliminarProgramacion(id);
         return ResponseEntity.ok(ProgramacionDTO.fromEntity(programacion));
     }
+    
+    @GetMapping("/taller/{tallerId}")
+    public ResponseEntity<List<ProgramacionDTO>> listarProgramacionesPorTaller(@PathVariable Long tallerId) {
+        List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
+        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.demo.services;
 
-import com.example.demo.entities.Colegio;
 import com.example.demo.entities.Taller;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;

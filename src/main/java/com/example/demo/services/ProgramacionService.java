@@ -87,4 +87,8 @@ public class ProgramacionService {
             throw new ResourceNotFoundException("La programación con id " + id + " no existe.");
         }
     }
+    
+    public List<Programacion> listarProgramacionesPorTaller(Long tallerId) throws ResourceNotFoundException {
+        return programacionRepository.findByTallerId(tallerId);
+    }
 }

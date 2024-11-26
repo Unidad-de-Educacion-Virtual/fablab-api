@@ -1,8 +1,6 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Inscripcion;
-import com.example.demo.entities.Participante;
-import com.example.demo.entities.Programacion;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.InscripcionRepository;
