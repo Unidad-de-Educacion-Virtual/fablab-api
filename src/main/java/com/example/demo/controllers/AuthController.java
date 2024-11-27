@@ -38,7 +38,7 @@ public class AuthController {
             String email = authentication.getName();
             User user = userService.buscarUsuario(email);
             String token = jwtUtil.createToken(user);
-            LoginResponseDTO loginRes = new LoginResponseDTO(email, token);
+            LoginResponseDTO loginRes = new LoginResponseDTO(token);
 
             return ResponseEntity.ok(loginRes);
         } catch (BadCredentialsException e){
