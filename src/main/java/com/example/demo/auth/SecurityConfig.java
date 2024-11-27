@@ -11,15 +11,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.demo.services.CustomUserDetailsService;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+@EnableMethodSecurity
 @Configuration
-@EnableMethodSecurity // Para habilitar la seguridad a nivel de métodos
 public class SecurityConfig {
 
     @Autowired

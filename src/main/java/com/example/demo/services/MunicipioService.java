@@ -6,12 +6,14 @@ import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.MunicipioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class MunicipioService {
 
     @Autowired

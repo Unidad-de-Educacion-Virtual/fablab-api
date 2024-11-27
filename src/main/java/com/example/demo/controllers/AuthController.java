@@ -5,12 +5,18 @@ import com.example.demo.DTO.LoginRequestDTO;
 import com.example.demo.DTO.LoginResponseDTO;
 import com.example.demo.auth.JwtUtil;
 import com.example.demo.entities.User;
+import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.services.UserService;
 
+import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,15 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
-    private final AuthenticationManager authenticationManager;
-    private JwtUtil jwtUtil;
-    
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-
-    }
+	
+	@Autowired UserService userService;
+	@Autowired AuthenticationManager authenticationManager;
+	@Autowired JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginReq)  {
@@ -35,8 +36,7 @@ public class AuthController {
         	UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginReq.getEmail(), loginReq.getPassword());
             Authentication authentication = authenticationManager.authenticate(authToken);
             String email = authentication.getName();
-            User user = new User();
-            user.setEmail(email);
+            User user = userService.buscarUsuario(email);
             String token = jwtUtil.createToken(user);
             LoginResponseDTO loginRes = new LoginResponseDTO(email, token);
 

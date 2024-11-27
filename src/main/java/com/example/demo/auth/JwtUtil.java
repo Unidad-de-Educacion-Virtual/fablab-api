@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.naming.AuthenticationException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entities.User;
@@ -20,7 +22,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtUtil {
 
-    private final String secret_key = "mysecretkey";
+    private final String SECRET_KEY;
+	
     private long accessTokenValidity = 60*60*1000;
 
     private final JwtParser jwtParser;
@@ -28,18 +31,23 @@ public class JwtUtil {
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
-    public JwtUtil(){
-        this.jwtParser = Jwts.parser().setSigningKey(secret_key);
+    public JwtUtil(@Value("${jwt.secret}") String SECRET_KEY){
+		this.SECRET_KEY = SECRET_KEY;
+        this.jwtParser = Jwts.parser().setSigningKey(this.SECRET_KEY);
     }
 
     public String createToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getEmail());
+        Claims claims = Jwts.claims();
+        
+        claims.setSubject(user.getEmail());
+        claims.put("rol", user.getRol().getDescripcion());
+
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(tokenValidity)
-                .signWith(SignatureAlgorithm.HS256, secret_key)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
@@ -83,10 +91,4 @@ public class JwtUtil {
     public String getEmail(Claims claims) {
         return claims.getSubject();
     }
-
-    private List<String> getRoles(Claims claims) {
-        return (List<String>) claims.get("roles");
-    }
-
-
 }

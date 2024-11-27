@@ -7,6 +7,7 @@ import com.example.demo.repositories.ParticipanteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,16 +25,19 @@ public class ParticipanteService {
     @Autowired
     private TipoDocumentoService tipoDocumentoService;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Participante buscarParticipante(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Participante> participante = participanteRepository.findById(id);
         return participante.get();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Participante> listarParticipantes() {
         return participanteRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Participante crearParticipante(Participante participante) throws ResourceNotFoundException {
 
         colegioService.showErrorIfNotExist(participante.getColegio());
@@ -42,6 +46,7 @@ public class ParticipanteService {
         return participanteRepository.save(participante);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Participante actualizarParticipante(Participante participante) throws ResourceNotFoundException {
         this.showErrorIfNotExist(participante);
 
@@ -51,6 +56,7 @@ public class ParticipanteService {
         return participanteRepository.save(participante);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Participante eliminarParticipante(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Participante> participante = participanteRepository.findById(id);
