@@ -1,12 +1,10 @@
 package com.example.demo.auth;
 
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.naming.AuthenticationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +22,7 @@ public class JwtUtil {
 
     private final String SECRET_KEY;
 	
-    private long accessTokenValidity = 60*60*1000;
+    private long accessTokenValidity = 60;
 
     private final JwtParser jwtParser;
 
@@ -82,6 +80,7 @@ public class JwtUtil {
 
     public boolean validateClaims(Claims claims) throws AuthenticationException {
         try {
+        	System.out.println(claims.getExpiration());
             return claims.getExpiration().after(new Date());
         } catch (Exception e) {
             throw e;
