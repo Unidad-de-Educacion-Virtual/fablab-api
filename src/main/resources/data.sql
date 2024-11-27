@@ -264,3 +264,12 @@ INSERT INTO evidencia (id, sesion_id, url, fecha, observacion) VALUES
 (18, 18, 'https://picsum.photos/200/300', '2024-12-18', 'Algunos estudiantes con dudas'),
 (19, 19, 'https://picsum.photos/200/300', '2024-12-19', 'Nivel de aprendizaje alto'),
 (20, 20, 'https://picsum.photos/200/300', '2024-12-20', 'Se debe profundizar en algunos temas');
+
+
+INSERT INTO rol (id, descripcion) VALUES
+(1, 'ADMIN'),
+(2, 'INSTRUCTOR');
+
+INSERT INTO user (email, password, rol_id) VALUES
+('admin@localhost', '$2a$12$PlsRZGeCNxzG.pRn9yJ4wuRivxZAx9MlJ9DfmX989c5tPUy2/wxEy', 1),
+('instructor@localhost', '$2a$12$7/HThTi0/6Ydx0pu1rwMB.YMzg9sxxwA57DgE/Q6d8PYY.ENl7sJu', 2);
