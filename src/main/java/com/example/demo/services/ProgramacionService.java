@@ -14,7 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+/*
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+ *     @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * */
 public class ProgramacionService {
 
     @Autowired
@@ -31,17 +35,19 @@ public class ProgramacionService {
 
     @Autowired
     private UbicacionService ubicacionService;
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Programacion buscarProgramacion(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Programacion> programacion = programacionRepository.findById(id);
         return programacion.get();
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Programacion> listarProgramaciones() {
         return programacionRepository.findAll();
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Programacion crearProgramacion(Programacion programacion) throws ResourceNotFoundException {
         colegioService.showErrorIfNotExist(programacion.getColegio());
         tallerService.showErrorIfNotExist(programacion.getTaller());
@@ -69,7 +75,7 @@ public class ProgramacionService {
         return programacionRepository.save(programacion);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Programacion actualizarProgramacion(Programacion programacion) throws ResourceNotFoundException {
         this.showErrorIfNotExist(programacion);
         
@@ -81,6 +87,7 @@ public class ProgramacionService {
         return programacionRepository.save(programacion);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")	
     public Programacion eliminarProgramacion(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Programacion> programacion = programacionRepository.findById(id);
@@ -94,13 +101,15 @@ public class ProgramacionService {
         return programacion.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")	
     public void showErrorIfNotExist(Programacion programacion) throws ResourceNotFoundException {
         if (programacion == null || programacion.getId() == null) {
             throw new ResourceNotFoundException("La programación no existe.");
         }
         showErrorIfNotExist(programacion.getId());
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Programacion> programacion = programacionRepository.findById(id);
 
@@ -109,6 +118,7 @@ public class ProgramacionService {
         }
     }
     
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramacionesPorTaller(Long tallerId) throws ResourceNotFoundException {
         return programacionRepository.findByTallerId(tallerId);
     }

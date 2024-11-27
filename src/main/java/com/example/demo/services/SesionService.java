@@ -16,6 +16,10 @@ import java.util.Optional;
 
 @Service
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+/*
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+ *     @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * */
 public class SesionService {
 
     @Autowired
@@ -30,16 +34,19 @@ public class SesionService {
     @Autowired
     private UbicacionService ubicacionService;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Sesion buscarSesion(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Sesion> sesion = sesionRepository.findById(id);
         return sesion.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Sesion> listarSesiones() {
         return sesionRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Sesion crearSesion(Sesion sesion) throws ResourceNotFoundException {
         programacionService.showErrorIfNotExist(sesion.getProgramacion());
         instructorService.showErrorIfNotExist(sesion.getInstructor());
@@ -48,6 +55,7 @@ public class SesionService {
         return sesionRepository.save(sesion);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Sesion actualizarSesion(Sesion sesion) throws ResourceNotFoundException {
         this.showErrorIfNotExist(sesion);
 
@@ -58,6 +66,7 @@ public class SesionService {
         return sesionRepository.save(sesion);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Sesion eliminarSesion(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Sesion> sesion = sesionRepository.findById(id);
@@ -71,6 +80,7 @@ public class SesionService {
         return sesion.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Sesion sesion) throws ResourceNotFoundException {
         if (sesion == null || sesion.getId() == null) {
             throw new ResourceNotFoundException("La sesión no existe.");
@@ -78,6 +88,7 @@ public class SesionService {
         showErrorIfNotExist(sesion.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Sesion> sesion = sesionRepository.findById(id);
 
@@ -85,7 +96,8 @@ public class SesionService {
             throw new ResourceNotFoundException("La sesión con id " + id + " no existe.");
         }
     }
-
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 	public List<Sesion> listarSesionesPorProgramacion(Long programacionId) throws ResourceNotFoundException{
 		return sesionRepository.findByProgramacionId(programacionId);
 	}

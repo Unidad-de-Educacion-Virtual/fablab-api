@@ -25,17 +25,19 @@ public class InscripcionService {
 
     @Autowired
     private ProgramacionService programacionService;
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Inscripcion buscarInscripcion(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Inscripcion> inscripcion = inscripcionRepository.findById(id);
         return inscripcion.get();
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Inscripcion> listarInscripciones() {
         return inscripcionRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Inscripcion crearInscripcion(Inscripcion inscripcion) throws ResourceNotFoundException {
 
         participanteService.showErrorIfNotExist(inscripcion.getParticipante());
@@ -44,6 +46,7 @@ public class InscripcionService {
         return inscripcionRepository.save(inscripcion);
     }
     
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Inscripcion actualizarInscripcion(Inscripcion inscripcion) throws ResourceNotFoundException {
         this.showErrorIfNotExist(inscripcion);
 
@@ -52,7 +55,8 @@ public class InscripcionService {
 
         return inscripcionRepository.save(inscripcion);
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Inscripcion eliminarInscripcion(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Inscripcion> inscripcion = inscripcionRepository.findById(id);
@@ -66,6 +70,7 @@ public class InscripcionService {
         return inscripcion.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Inscripcion inscripcion) throws ResourceNotFoundException {
         if (inscripcion == null || inscripcion.getId() == null) {
             throw new ResourceNotFoundException("La inscripción no existe.");
@@ -73,6 +78,7 @@ public class InscripcionService {
         showErrorIfNotExist(inscripcion.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Inscripcion> inscripcion = inscripcionRepository.findById(id);
 
@@ -80,7 +86,8 @@ public class InscripcionService {
             throw new ResourceNotFoundException("La inscripción con id " + id + " no existe.");
         }
     }
-
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 	public List<Inscripcion> listarInscripcionesPorProgramacion(Long programacionId) {
 		return inscripcionRepository.findAllByProgramacionId(programacionId);
 	}

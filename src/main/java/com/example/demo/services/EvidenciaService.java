@@ -22,24 +22,27 @@ public class EvidenciaService {
 
     @Autowired
     private SesionService sesionService;
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Evidencia buscarEvidencia(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Evidencia> evidencia = evidenciaRepository.findById(id);
         return evidencia.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Evidencia> listarEvidencias() {
         return evidenciaRepository.findAll();
     }
-
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Evidencia crearEvidencia(Evidencia evidencia) throws ResourceNotFoundException {
     	
         sesionService.showErrorIfNotExist(evidencia.getSesion());
 
         return evidenciaRepository.save(evidencia);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Evidencia actualizarEvidencia(Evidencia evidencia) throws ResourceNotFoundException {
         this.showErrorIfNotExist(evidencia);
 
@@ -48,6 +51,7 @@ public class EvidenciaService {
         return evidenciaRepository.save(evidencia);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Evidencia eliminarEvidencia(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Evidencia> evidencia = evidenciaRepository.findById(id);
@@ -61,6 +65,7 @@ public class EvidenciaService {
         return evidencia.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Evidencia evidencia) throws ResourceNotFoundException {
         if (evidencia == null || evidencia.getId() == null) {
             throw new ResourceNotFoundException("La evidencia no existe.");
@@ -68,6 +73,7 @@ public class EvidenciaService {
         showErrorIfNotExist(evidencia.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Evidencia> evidencia = evidenciaRepository.findById(id);
 
@@ -76,6 +82,7 @@ public class EvidenciaService {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 	public List<Evidencia> listarEvidenciasPorSesion(Long sesionId) {
 		return evidenciaRepository.findBySesionId(sesionId);
 	}

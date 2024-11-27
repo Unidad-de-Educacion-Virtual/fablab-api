@@ -14,32 +14,34 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 public class TallerService {
 
     @Autowired
     private TallerRepository tallerRepository;
-
+    
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Taller buscarTaller(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Taller> taller = tallerRepository.findById(id);
         
         return taller.get();
     }
-
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Taller> listarTalleres() {
         return tallerRepository.findAll();
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Taller crearTaller(Taller taller) {
         return tallerRepository.save(taller);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Taller actualizarTaller(Taller taller) throws ResourceNotFoundException {
         this.showErrorIfNotExist(taller.getId());
         return tallerRepository.save(taller);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Taller eliminarTaller(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Taller> taller = tallerRepository.findById(id);
@@ -52,14 +54,14 @@ public class TallerService {
         
         return taller.get();
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist	(Taller taller) throws ResourceNotFoundException {
     	if(taller == null || taller.getId() == null) {
     		throw new ResourceNotFoundException("El taller no existe.");
     	}
     	showErrorIfNotExist(taller.getId());
     }
-    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Taller> taller = tallerRepository.findById(id);
         

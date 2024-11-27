@@ -25,17 +25,20 @@ public class AsistenteService {
 
     @Autowired
     private ParticipanteService participanteService;
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Asistente buscarAsistente(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Asistente> asistente = asistenteRepository.findById(id);
         return asistente.get();
     }
-
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Asistente> listarAsistentes() {
         return asistenteRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Asistente crearAsistente(Asistente asistente) throws ResourceNotFoundException {
 
         sesionService.showErrorIfNotExist(asistente.getSesion());
@@ -44,6 +47,7 @@ public class AsistenteService {
         return asistenteRepository.save(asistente);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Asistente actualizarAsistente(Asistente asistente) throws ResourceNotFoundException {
         this.showErrorIfNotExist(asistente);
 
@@ -53,6 +57,7 @@ public class AsistenteService {
         return asistenteRepository.save(asistente);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Asistente eliminarAsistente(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Asistente> asistente = asistenteRepository.findById(id);
@@ -66,6 +71,7 @@ public class AsistenteService {
         return asistente.get();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Asistente asistente) throws ResourceNotFoundException {
         if (asistente == null || asistente.getId() == null) {
             throw new ResourceNotFoundException("El asistente no existe.");
@@ -73,6 +79,7 @@ public class AsistenteService {
         showErrorIfNotExist(asistente.getId());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Asistente> asistente = asistenteRepository.findById(id);
 
@@ -80,8 +87,10 @@ public class AsistenteService {
             throw new ResourceNotFoundException("El asistente con id " + id + " no existe.");
         }
     }
-
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 	public List<Asistente> listarAsistentesPorSesion(Long sesionId) {
 		return asistenteRepository.findBySesionId(sesionId);
 	}
+    
 }
