@@ -38,11 +38,18 @@ public class ProgramacionController {
     }
 
     @PostMapping
-    public ResponseEntity<ProgramacionDTO> crearProgramacion(@RequestBody ProgramacionRequestDTO programacionRequestDTO) throws ResourceNotFoundException {
-        Programacion programacion = programacionRequestDTO.toEntity();
-        programacion = programacionService.crearProgramacion(programacion);
-        return ResponseEntity.status(201).body(ProgramacionDTO.fromEntity(programacion));
+    public ResponseEntity<?> crearProgramacion(@RequestBody ProgramacionRequestDTO programacionRequestDTO) {
+        try {
+            Programacion programacion = programacionRequestDTO.toEntity();
+            programacion = programacionService.crearProgramacion(programacion);
+            return ResponseEntity.status(201).body(ProgramacionDTO.fromEntity(programacion));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ProgramacionDTO> actualizarProgramacion(@PathVariable Long id, @RequestBody ProgramacionRequestDTO programacionRequestDTO) throws ResourceNotFoundException {

@@ -48,8 +48,27 @@ public class ProgramacionService {
         instructorService.showErrorIfNotExist(programacion.getInstructor());
         ubicacionService.showErrorIfNotExist(programacion.getUbicacion());
 
+        List<Programacion> conflictosInstructor = programacionRepository.findConflictsByInstructor(
+                programacion.getInstructor().getId(),
+                programacion.getFechaInicio(),
+                programacion.getFechaFin()
+        );
+        if (!conflictosInstructor.isEmpty()) {
+            throw new IllegalArgumentException("El instructor ya tiene programaciones en el rango de fechas especificado.");
+        }
+
+        List<Programacion> conflictosUbicacion = programacionRepository.findConflictsByUbicacion(
+                programacion.getUbicacion().getId(),
+                programacion.getFechaInicio(),
+                programacion.getFechaFin()
+        );
+        if (!conflictosUbicacion.isEmpty()) {
+            throw new IllegalArgumentException("La ubicación ya está ocupada en el rango de fechas especificado.");
+        }
+
         return programacionRepository.save(programacion);
     }
+
 
     public Programacion actualizarProgramacion(Programacion programacion) throws ResourceNotFoundException {
         this.showErrorIfNotExist(programacion);
