@@ -80,4 +80,8 @@ public class InscripcionService {
             throw new ResourceNotFoundException("La inscripción con id " + id + " no existe.");
         }
     }
+
+	public List<Inscripcion> listarInscripcionesPorProgramacion(Long programacionId) {
+		return inscripcionRepository.findAllByProgramacionId(programacionId);
+	}
 }

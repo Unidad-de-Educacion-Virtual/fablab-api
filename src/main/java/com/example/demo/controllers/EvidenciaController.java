@@ -3,13 +3,16 @@ package com.example.demo.controllers;
 import com.example.demo.DTO.EvidenciaDTO;
 import com.example.demo.DTO.EvidenciaRequestDTO;
 import com.example.demo.entities.Evidencia;
+import com.example.demo.exceptions.FilesException;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.services.EvidenciaService;
+import com.example.demo.services.UploadFilesService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,6 +23,9 @@ public class EvidenciaController {
     @Autowired
     private EvidenciaService evidenciaService;
 
+    @Autowired
+    private UploadFilesService uploadFilesService;
+    
     @GetMapping
     public ResponseEntity<List<EvidenciaDTO>> listarEvidencias(@RequestParam(required = false) Long sesionId) {
     	if(sesionId!=null) {
@@ -38,9 +44,10 @@ public class EvidenciaController {
     }
 
     @PostMapping
-    public ResponseEntity<EvidenciaDTO> crearEvidencia(@RequestBody EvidenciaRequestDTO evidenciaRequestDTO) throws ResourceNotFoundException {
+    public ResponseEntity<EvidenciaDTO> crearEvidencia(@RequestBody EvidenciaRequestDTO evidenciaRequestDTO) throws Exception {
         Evidencia evidencia = evidenciaRequestDTO.toEntity();
         evidencia = evidenciaService.crearEvidencia(evidencia);
+        //evidencia.setUrl(uploadFilesService.uploadFile(file));
         return ResponseEntity.status(201).body(EvidenciaDTO.fromEntity(evidencia));
     }
 

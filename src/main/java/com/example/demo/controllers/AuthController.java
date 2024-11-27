@@ -5,10 +5,7 @@ import com.example.demo.DTO.LoginRequestDTO;
 import com.example.demo.DTO.LoginResponseDTO;
 import com.example.demo.auth.JwtUtil;
 import com.example.demo.entities.User;
-import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.UserService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

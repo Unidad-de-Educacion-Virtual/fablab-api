@@ -21,9 +21,15 @@ public class InscripcionController {
     private InscripcionService inscripcionService;
 
     @GetMapping
-    public ResponseEntity<List<InscripcionDTO>> listarInscripciones() {
-        List<Inscripcion> inscripciones = inscripcionService.listarInscripciones();
-        return ResponseEntity.ok(InscripcionDTO.fromEntity(inscripciones));
+    public ResponseEntity<List<InscripcionDTO>> listarInscripciones(@RequestParam(required = false) Long programacionId) {
+    	 if (programacionId!=null) {
+    		 List<Inscripcion> inscripciones = inscripcionService.listarInscripcionesPorProgramacion(programacionId);
+    	        return ResponseEntity.ok(InscripcionDTO.fromEntity(inscripciones));
+    	 }else {
+    		 List<Inscripcion> inscripciones = inscripcionService.listarInscripciones();
+    	        return ResponseEntity.ok(InscripcionDTO.fromEntity(inscripciones));
+    	 }
+    	
     }
 
     @GetMapping("/{id}")
