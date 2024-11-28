@@ -15,8 +15,6 @@ import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.services.EvidenciaService;
 import com.example.demo.services.FileService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -70,14 +67,13 @@ public class EvidenciaController {
 		Evidencia evidencia = evidenciaRequestDTO.toEntity();
 		evidencia.setId(id);
 		
-		String oldFilePath = evidenciaService.buscarEvidencia(id).getUrl();
-		String oldFileName = Paths.get(oldFilePath).getFileName().toString();
+		String oldFileName = evidenciaService.buscarEvidencia(id).getUrl();
 		
 		if(file != null) {
 			String path = fileService.uploadFile(file);
 			evidencia.setUrl(path);
 		} else {
-			evidencia.setUrl(oldFilePath);
+			evidencia.setUrl(oldFileName);
 		}
 		
 		evidencia = evidenciaService.actualizarEvidencia(evidencia);
@@ -92,8 +88,7 @@ public class EvidenciaController {
     @DeleteMapping("/{id}")
     public ResponseEntity<EvidenciaDTO> eliminarEvidencia(@PathVariable Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException, IOException {
         Evidencia evidencia = evidenciaService.eliminarEvidencia(id);
-        String oldFilePath = evidencia.getUrl();
-        String oldFileName = Paths.get(oldFilePath).getFileName().toString();
+        String oldFileName = evidencia.getUrl();
         fileService.deleteFile(oldFileName);
         return ResponseEntity.ok(EvidenciaDTO.fromEntity(evidencia));
     }

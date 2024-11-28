@@ -20,7 +20,6 @@ import com.example.demo.exceptions.FilesException;
 public class FileService {
 	
 	private final String uploadDirectory = "src/main/resources/uploads/";
-	private final String apiUploads = "/api/file/";
 	
 	public Resource getFile(String filename) throws IOException {
 		Path filePath = Paths.get(uploadDirectory).resolve(filename).normalize();
@@ -80,7 +79,7 @@ public class FileService {
 					
 					Path path = Paths.get(uploadDirectory).resolve(newFile).normalize();
 					Files.write(path, bytes);
-					return Paths.get(apiUploads).resolve(newFile).normalize().toString().replace("\\", "/");
+					return path.getFileName().toString().replace("\\", "/");
 			} else {
 				throw new FilesException("Ese Tipo de archivo no esta permitido, y este es el nombre:" + fileOriginalName + " y pesa: " +fileSize);
 			}
