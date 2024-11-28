@@ -1,5 +1,6 @@
 package com.example.demo.DTO;
 
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entities.Evidencia;
@@ -13,7 +14,6 @@ import lombok.Data;
 public class EvidenciaRequestDTO {
     private Long sesionId;
     private String observacion;
-    private MultipartFile file;
     
     public Evidencia toEntity() {
         Evidencia evidencia = new Evidencia();

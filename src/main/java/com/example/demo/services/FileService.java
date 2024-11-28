@@ -32,6 +32,20 @@ public class FileService {
         Resource resource = new PathResource(filePath.toString());
         return resource;
 	}
+	
+	public void deleteFile(String filename) throws IOException {
+		Path filePath = Paths.get(uploadDirectory).resolve(filename).normalize();
+        
+		if(!Files.exists(filePath)) {
+			throw new IOException("El archivo no existe");
+		}
+        
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new IOException("No se pudo eliminar el archivo: " + filename, e);
+        }
+	}
 
 	public String uploadFile(MultipartFile file) throws Exception {
 		try {
