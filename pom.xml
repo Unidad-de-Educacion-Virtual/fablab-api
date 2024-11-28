@@ -103,11 +103,6 @@
    			<artifactId>jaxb-api</artifactId>
    			<version>2.3.0</version>
   		</dependency>
-		<dependency>
-			<groupId>com.example</groupId>
-			<artifactId>Ejemplo-2</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
