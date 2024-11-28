@@ -53,10 +53,14 @@ public class ProgramacionService {
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Programacion crearProgramacion(Programacion programacion) throws ResourceNotFoundException {
-        colegioService.showErrorIfNotExist(programacion.getColegio());
+    	colegioService.showErrorIfNotExist(programacion.getColegio());
         tallerService.showErrorIfNotExist(programacion.getTaller());
         instructorService.showErrorIfNotExist(programacion.getInstructor());
         ubicacionService.showErrorIfNotExist(programacion.getUbicacion());
+        
+        if(programacion.getFechaInicio() != null && programacion.getFechaInicio().isAfter(programacion.getFechaFin())) {
+        	throw new IllegalArgumentException("La fecha de inicio no puede ir después que la fecha de fin");
+        }
 
         List<Programacion> conflictosInstructor = programacionRepository.findConflictsByInstructor(
                 programacion.getInstructor().getId(),
@@ -72,6 +76,7 @@ public class ProgramacionService {
                 programacion.getFechaInicio(),
                 programacion.getFechaFin()
         );
+        
         if (!conflictosUbicacion.isEmpty()) {
             throw new IllegalArgumentException("La ubicación ya está ocupada en el rango de fechas especificado.");
         }
