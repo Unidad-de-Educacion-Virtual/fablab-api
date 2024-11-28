@@ -1,15 +1,19 @@
 package com.example.demo.DTO;
 
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.entities.Evidencia;
 import com.example.demo.entities.Sesion;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class EvidenciaRequestDTO {
     private Long sesionId;
     private String observacion;
-    private String url;
     
     public Evidencia toEntity() {
         Evidencia evidencia = new Evidencia();
@@ -21,7 +25,6 @@ public class EvidenciaRequestDTO {
         }
 
         evidencia.setObservacion(this.observacion);
-        evidencia.setUrl(this.url);
         
         return evidencia;
     }
