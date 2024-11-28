@@ -20,18 +20,20 @@ public class ProgramacionController {
     @Autowired
     private ProgramacionService programacionService;
 
-    @GetMapping
-    public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones(@RequestParam(required = false) Long tallerId,@RequestParam(required = false) Boolean proximas) {
-    	if(tallerId!=null) {
-    		 List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
-    	        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
-    	}else if(proximas!=null){
-    		return ResponseEntity.ok(programacionService.listarProgramacionesPosteriores());
-    	}else{
-        List<Programacion> programaciones = programacionService.listarProgramaciones();
-        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
-    	}
-    }
+	@GetMapping
+	public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones(@RequestParam(required = false) Long tallerId,
+			@RequestParam(required = false) Boolean proximas) {
+		if (tallerId != null) {
+			List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
+			return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+		} else if (proximas != null) {
+			List<Programacion> programaciones = programacionService.listarProgramacionesPosteriores();
+			return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+		} else {
+			List<Programacion> programaciones = programacionService.listarProgramaciones();
+			return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
+		}
+	}
 
     @GetMapping("/{id}")
     public ResponseEntity<ProgramacionDTO> obtenerProgramacion(@PathVariable Long id) throws ResourceNotFoundException {
@@ -41,15 +43,9 @@ public class ProgramacionController {
 
     @PostMapping
     public ResponseEntity<?> crearProgramacion(@RequestBody ProgramacionRequestDTO programacionRequestDTO) {
-        try {
-            Programacion programacion = programacionRequestDTO.toEntity();
-            programacion = programacionService.crearProgramacion(programacion);
-            return ResponseEntity.status(201).body(ProgramacionDTO.fromEntity(programacion));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+        Programacion programacion = programacionRequestDTO.toEntity();
+        programacion = programacionService.crearProgramacion(programacion);
+        return ResponseEntity.status(201).body(ProgramacionDTO.fromEntity(programacion));
     }
 
 
@@ -57,9 +53,7 @@ public class ProgramacionController {
     public ResponseEntity<ProgramacionDTO> actualizarProgramacion(@PathVariable Long id, @RequestBody ProgramacionRequestDTO programacionRequestDTO) throws ResourceNotFoundException {
         Programacion programacion = programacionRequestDTO.toEntity();
         programacion.setId(id);
-        System.out.println(programacion.getObservacion());
         programacion = programacionService.actualizarProgramacion(programacion);
-        System.out.println(programacion.getObservacion());
         return ResponseEntity.ok(ProgramacionDTO.fromEntity(programacion));
     }
 

@@ -20,10 +20,7 @@ public class ProgramacionDTO {
     private Integer grado;
     private String grupo;
     private UbicacionDTO ubicacion;
-    private Integer cantidadInscritos;
-    
-    
-    
+    private Integer cantidadInscritos; 
     
     public static ProgramacionDTO fromEntity(Programacion programacion) {
         ProgramacionDTO programacionDTO = new ProgramacionDTO();
@@ -54,7 +51,9 @@ public class ProgramacionDTO {
         if (programacion.getUbicacion() != null) {
             programacionDTO.setUbicacion(UbicacionDTO.fromEntity(programacion.getUbicacion()));
         }
-
+        if(programacion.getInscripciones() != null) {
+        	programacionDTO.setCantidadInscritos(programacion.getInscripciones().size());
+        }
         return programacionDTO;
     }
 

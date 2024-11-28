@@ -27,14 +27,11 @@ public class SesionController {
         	List<Sesion> sesiones = sesionService.listarSesionesPorProgramacion(programacionId);
 	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
 		} else if(reciente!=null){
-			return ResponseEntity.ok(sesionService.listarSesionesPasadasUnMes());
-		}else {
+			return ResponseEntity.ok(SesionDTO.fromEntity(sesionService.listarSesionesPasadasUnMes()));
+		} else {
 	    	List<Sesion> sesiones = sesionService.listarSesiones();
 	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
 		}
-        
-        
-    	
     }
 
     @GetMapping("/{id}")

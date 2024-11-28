@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class ColegioService {
 	@Autowired
 	private ColegioRepository colegioRepository;
@@ -22,6 +21,7 @@ public class ColegioService {
 	@Autowired
 	private MunicipioService municipioService;
 
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Colegio buscarColegio(Long id) {
     	this.showErrorIfNotExist(id);
     	Optional<Colegio> colegio = colegioRepository.findById(id);
@@ -29,16 +29,19 @@ public class ColegioService {
         return colegio.get();
     }
 
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Colegio> listarColegios() {
     	return colegioRepository.findAll();
     }
     
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Colegio crearColegio(Colegio colegio) throws ResourceNotFoundException {
     	municipioService.showErrorIfNotExist(colegio.getMunicipio());
     	
     	return colegioRepository.save(colegio);
     }
     
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Colegio actualizarColegio(Colegio colegio) throws ResourceNotFoundException {
     	this.showErrorIfNotExist(colegio);
     	municipioService.showErrorIfNotExist(colegio.getMunicipio());
@@ -46,6 +49,7 @@ public class ColegioService {
     	return colegioRepository.save(colegio);
     }
 
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Colegio eliminarColegio(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
     	this.showErrorIfNotExist(id);
     	Optional<Colegio> colegio = colegioRepository.findById(id);

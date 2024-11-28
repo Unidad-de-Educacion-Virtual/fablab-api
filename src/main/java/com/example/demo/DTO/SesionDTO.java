@@ -18,6 +18,7 @@ public class SesionDTO {
     private UbicacionDTO ubicacion;
     private Integer totalAsistentes;
     private Integer cantidadEvidencias;
+    private TallerMiniumDTO taller;
     
     public static SesionDTO fromEntity(Sesion sesion) {
         SesionDTO sesionDTO = new SesionDTO();
@@ -33,6 +34,10 @@ public class SesionDTO {
 
         if (sesion.getProgramacion() != null) {
             sesionDTO.setProgramacion(ProgramacionMiniumDTO.fromEntity(sesion.getProgramacion()));
+            
+            if(sesion.getProgramacion().getTaller() != null) {
+            	sesionDTO.setTaller(TallerMiniumDTO.fromEntity(sesion.getProgramacion().getTaller()));
+            }
         }
         if (sesion.getInstructor() != null) {
             sesionDTO.setInstructor(InstructorMiniumDTO.fromEntity(sesion.getInstructor()));
@@ -40,6 +45,7 @@ public class SesionDTO {
         if (sesion.getUbicacion() != null) {
             sesionDTO.setUbicacion(UbicacionDTO.fromEntity(sesion.getUbicacion()));
         }
+        sesionDTO.setCantidadEvidencias(sesion.getEvidencias() != null ? sesion.getEvidencias().size() : 0);
         sesionDTO.setTotalAsistentes(sesion.getAsistentes() != null ? sesion.getAsistentes().size() : 0);
         return sesionDTO;
     }

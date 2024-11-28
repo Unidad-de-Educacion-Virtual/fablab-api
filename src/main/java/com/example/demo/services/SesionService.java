@@ -18,10 +18,6 @@ import java.util.Optional;
 
 @Service
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
-/*
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
- *     @PreAuthorize("hasRole('ROLE_ADMIN')")
- * */
 public class SesionService {
 
     @Autowired
@@ -82,7 +78,6 @@ public class SesionService {
         return sesion.get();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Sesion sesion) throws ResourceNotFoundException {
         if (sesion == null || sesion.getId() == null) {
             throw new ResourceNotFoundException("La sesión no existe.");
@@ -90,7 +85,6 @@ public class SesionService {
         showErrorIfNotExist(sesion.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Sesion> sesion = sesionRepository.findById(id);
 
@@ -105,16 +99,10 @@ public class SesionService {
 	}
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
-    public List<SesionDTO> listarSesionesPasadasUnMes() {
+    public List<Sesion> listarSesionesPasadasUnMes() {
         LocalDate fechaLimite = LocalDate.now().minusMonths(1);
-        List<Sesion> sesiones = sesionRepository.findSesionesAntesDeFecha(fechaLimite);
+        List<Sesion> sesiones = sesionRepository.findSesionesDespuesDeFecha(fechaLimite);
 
-        List<SesionDTO> sesionesDTO = SesionDTO.fromEntity(sesiones);
-        for (SesionDTO dto : sesionesDTO) {
-            int cantidadEvidencias = sesionRepository.countEvidenciasBySesionId(dto.getId());
-            dto.setCantidadEvidencias(cantidadEvidencias);
-        }
-
-        return sesionesDTO;
+        return sesiones;
     }
 }

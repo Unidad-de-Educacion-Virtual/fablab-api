@@ -105,7 +105,6 @@ public class ProgramacionService {
         return programacion.get();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")	
     public void showErrorIfNotExist(Programacion programacion) throws ResourceNotFoundException {
         if (programacion == null || programacion.getId() == null) {
             throw new ResourceNotFoundException("La programación no existe.");
@@ -113,7 +112,6 @@ public class ProgramacionService {
         showErrorIfNotExist(programacion.getId());
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Programacion> programacion = programacionRepository.findById(id);
 
@@ -129,16 +127,9 @@ public class ProgramacionService {
     
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
-    public List<ProgramacionDTO> listarProgramacionesPosteriores() {
+    public List<Programacion> listarProgramacionesPosteriores() {
     	 LocalDate fechaActual = LocalDate.now();
-         List<Programacion> programaciones = programacionRepository.findAllByFechaInicioAfter(fechaActual);
-
-         List<ProgramacionDTO> programacionDTOs = ProgramacionDTO.fromEntity(programaciones);
-         for (ProgramacionDTO dto : programacionDTOs) {
-             Long cantidadInscritos = programacionRepository.countByProgramacionId(dto.getId());
-             dto.setCantidadInscritos(cantidadInscritos.intValue());
-         }
-
-         return programacionDTOs;
+         List<Programacion> programaciones = programacionRepository.findAllProximasOrActuales(fechaActual);
+         return programaciones;
     }
 }
