@@ -1,5 +1,7 @@
 package com.example.demo.entities;
 import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -38,5 +40,8 @@ public class Programacion {
     @ManyToOne
     @JoinColumn(name = "ubicacion_id", nullable = false)
     private Ubicacion ubicacion;
+    
+    @OneToMany(mappedBy = "programacion")
+    private List<Inscripcion> inscripciones;
 
 }

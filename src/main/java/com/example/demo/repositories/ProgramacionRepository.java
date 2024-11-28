@@ -22,15 +22,6 @@ public interface ProgramacionRepository extends JpaRepository<Programacion, Long
 
     List<Programacion> findByTallerId(Long tallerId);
     
-    @Query("SELECT p FROM Programacion p WHERE p.fechaInicio >= :fechaActual")
-    List<Programacion> findAllByFechaInicioAfter(@Param("fechaActual") LocalDate fechaActual);
-    
-    @Query("SELECT COUNT(i) FROM Inscripcion i WHERE i.programacion.id = :programacionId")
-    Long countByProgramacionId(@Param("programacionId") Long programacionId);
+    @Query("SELECT p FROM Programacion p WHERE p.fechaInicio > :fechaActual OR (:fechaActual BETWEEN p.fechaInicio AND p.fechaFin) ORDER BY p.fechaInicio ASC")
+    List<Programacion> findAllProximasOrActuales(@Param("fechaActual") LocalDate fechaActual);
 }
-
-
-
-	
-	
-	//List<Programacion> findByTallerId(Long tallerId);

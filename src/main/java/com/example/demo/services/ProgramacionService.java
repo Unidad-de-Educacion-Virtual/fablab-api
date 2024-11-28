@@ -129,16 +129,9 @@ public class ProgramacionService {
     
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
-    public List<ProgramacionDTO> listarProgramacionesPosteriores() {
+    public List<Programacion> listarProgramacionesPosteriores() {
     	 LocalDate fechaActual = LocalDate.now();
-         List<Programacion> programaciones = programacionRepository.findAllByFechaInicioAfter(fechaActual);
-
-         List<ProgramacionDTO> programacionDTOs = ProgramacionDTO.fromEntity(programaciones);
-         for (ProgramacionDTO dto : programacionDTOs) {
-             Long cantidadInscritos = programacionRepository.countByProgramacionId(dto.getId());
-             dto.setCantidadInscritos(cantidadInscritos.intValue());
-         }
-
-         return programacionDTOs;
+         List<Programacion> programaciones = programacionRepository.findAllProximasOrActuales(fechaActual);
+         return programaciones;
     }
 }

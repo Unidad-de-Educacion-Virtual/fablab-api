@@ -12,13 +12,8 @@ import com.example.demo.entities.Sesion;
 public interface SesionRepository extends JpaRepository<Sesion, Long> {
 
 	List<Sesion> findByProgramacionId(Long programacionId);
-
-	@Query("SELECT COUNT(a) FROM Asistente a WHERE a.sesion.id = :sesionId")
-    int countAsistentesBySesionId(@Param("sesionId") Long sesionId);
 	
-	 @Query("SELECT s FROM Sesion s WHERE s.fecha < :fechaLimite")
-	    List<Sesion> findSesionesAntesDeFecha(@Param("fechaLimite") LocalDate fechaLimite);
+	@Query("SELECT s FROM Sesion s WHERE s.fecha > :fechaLimite ORDER BY s.fecha DESC")
+	List<Sesion> findSesionesDespuesDeFecha(@Param("fechaLimite") LocalDate fechaLimite);
 
-	    @Query("SELECT COUNT(e) FROM Evidencia e WHERE e.sesion.id = :sesionId")
-	    int countEvidenciasBySesionId(@Param("sesionId") Long sesionId);
 }
