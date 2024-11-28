@@ -22,11 +22,13 @@ public class SesionController {
 
     
     @GetMapping
-    public ResponseEntity<List<SesionDTO>> listarSesiones(@RequestParam(required = false) Long programacionId) {
+    public ResponseEntity<List<SesionDTO>> listarSesiones(@RequestParam(required = false) Long programacionId,@RequestParam(required = false) Boolean reciente) {
         if (programacionId!=null) {
         	List<Sesion> sesiones = sesionService.listarSesionesPorProgramacion(programacionId);
 	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
-		} else {
+		} else if(reciente!=null){
+			return ResponseEntity.ok(sesionService.listarSesionesPasadasUnMes());
+		}else {
 	    	List<Sesion> sesiones = sesionService.listarSesiones();
 	        return ResponseEntity.ok(SesionDTO.fromEntity(sesiones));
 		}

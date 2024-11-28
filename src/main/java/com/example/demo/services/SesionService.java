@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.DTO.SesionDTO;
 import com.example.demo.entities.Sesion;
 
 import com.example.demo.exceptions.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,4 +103,18 @@ public class SesionService {
 	public List<Sesion> listarSesionesPorProgramacion(Long programacionId) throws ResourceNotFoundException{
 		return sesionRepository.findByProgramacionId(programacionId);
 	}
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+    public List<SesionDTO> listarSesionesPasadasUnMes() {
+        LocalDate fechaLimite = LocalDate.now().minusMonths(1);
+        List<Sesion> sesiones = sesionRepository.findSesionesAntesDeFecha(fechaLimite);
+
+        List<SesionDTO> sesionesDTO = SesionDTO.fromEntity(sesiones);
+        for (SesionDTO dto : sesionesDTO) {
+            int cantidadEvidencias = sesionRepository.countEvidenciasBySesionId(dto.getId());
+            dto.setCantidadEvidencias(cantidadEvidencias);
+        }
+
+        return sesionesDTO;
+    }
 }

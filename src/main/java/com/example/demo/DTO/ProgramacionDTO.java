@@ -20,7 +20,11 @@ public class ProgramacionDTO {
     private Integer grado;
     private String grupo;
     private UbicacionDTO ubicacion;
-
+    private Integer cantidadInscritos;
+    
+    
+    
+    
     public static ProgramacionDTO fromEntity(Programacion programacion) {
         ProgramacionDTO programacionDTO = new ProgramacionDTO();
         programacionDTO.setId(programacion.getId());

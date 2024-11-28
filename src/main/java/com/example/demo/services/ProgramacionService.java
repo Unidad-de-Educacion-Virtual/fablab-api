@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.DTO.ProgramacionDTO;
 import com.example.demo.entities.Programacion;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
@@ -10,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +37,8 @@ public class ProgramacionService {
 
     @Autowired
     private UbicacionService ubicacionService;
+    
+    
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Programacion buscarProgramacion(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
@@ -123,4 +127,18 @@ public class ProgramacionService {
         return programacionRepository.findByTallerId(tallerId);
     }
     
+    
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+    public List<ProgramacionDTO> listarProgramacionesPosteriores() {
+    	 LocalDate fechaActual = LocalDate.now();
+         List<Programacion> programaciones = programacionRepository.findAllByFechaInicioAfter(fechaActual);
+
+         List<ProgramacionDTO> programacionDTOs = ProgramacionDTO.fromEntity(programaciones);
+         for (ProgramacionDTO dto : programacionDTOs) {
+             Long cantidadInscritos = programacionRepository.countByProgramacionId(dto.getId());
+             dto.setCantidadInscritos(cantidadInscritos.intValue());
+         }
+
+         return programacionDTOs;
+    }
 }

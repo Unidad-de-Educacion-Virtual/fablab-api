@@ -21,11 +21,13 @@ public class ProgramacionController {
     private ProgramacionService programacionService;
 
     @GetMapping
-    public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones(@RequestParam(required = false) Long tallerId) {
+    public ResponseEntity<List<ProgramacionDTO>> listarProgramaciones(@RequestParam(required = false) Long tallerId,@RequestParam(required = false) Boolean proximas) {
     	if(tallerId!=null) {
     		 List<Programacion> programaciones = programacionService.listarProgramacionesPorTaller(tallerId);
     	        return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
-    	}else {
+    	}else if(proximas!=null){
+    		return ResponseEntity.ok(programacionService.listarProgramacionesPosteriores());
+    	}else{
         List<Programacion> programaciones = programacionService.listarProgramaciones();
         return ResponseEntity.ok(ProgramacionDTO.fromEntity(programaciones));
     	}

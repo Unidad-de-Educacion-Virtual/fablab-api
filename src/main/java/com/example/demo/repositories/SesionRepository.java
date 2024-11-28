@@ -1,5 +1,6 @@
 package com.example.demo.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,10 @@ public interface SesionRepository extends JpaRepository<Sesion, Long> {
 
 	@Query("SELECT COUNT(a) FROM Asistente a WHERE a.sesion.id = :sesionId")
     int countAsistentesBySesionId(@Param("sesionId") Long sesionId);
+	
+	 @Query("SELECT s FROM Sesion s WHERE s.fecha < :fechaLimite")
+	    List<Sesion> findSesionesAntesDeFecha(@Param("fechaLimite") LocalDate fechaLimite);
+
+	    @Query("SELECT COUNT(e) FROM Evidencia e WHERE e.sesion.id = :sesionId")
+	    int countEvidenciasBySesionId(@Param("sesionId") Long sesionId);
 }

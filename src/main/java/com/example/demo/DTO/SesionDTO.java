@@ -17,7 +17,8 @@ public class SesionDTO {
     private InstructorMiniumDTO instructor;
     private UbicacionDTO ubicacion;
     private Integer totalAsistentes;
-
+    private Integer cantidadEvidencias;
+    
     public static SesionDTO fromEntity(Sesion sesion) {
         SesionDTO sesionDTO = new SesionDTO();
         sesionDTO.setId(sesion.getId());
