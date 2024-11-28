@@ -105,7 +105,6 @@ public class ProgramacionService {
         return programacion.get();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")	
     public void showErrorIfNotExist(Programacion programacion) throws ResourceNotFoundException {
         if (programacion == null || programacion.getId() == null) {
             throw new ResourceNotFoundException("La programación no existe.");
@@ -113,7 +112,6 @@ public class ProgramacionService {
         showErrorIfNotExist(programacion.getId());
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Programacion> programacion = programacionRepository.findById(id);
 

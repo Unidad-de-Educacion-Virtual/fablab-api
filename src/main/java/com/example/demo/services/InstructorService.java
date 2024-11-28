@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class InstructorService {
 
     @Autowired
     private InstructorRepository instructorRepository;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Instructor buscarInstructor(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<Instructor> instructor = instructorRepository.findById(id);
@@ -27,19 +27,23 @@ public class InstructorService {
         return instructor.get();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Instructor> listarInstructores() {
         return instructorRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Instructor crearInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Instructor actualizarInstructor(Instructor instructor) throws ResourceNotFoundException {
         this.showErrorIfNotExist(instructor.getId());
         return instructorRepository.save(instructor);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Instructor eliminarInstructor(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Instructor> instructor = instructorRepository.findById(id);

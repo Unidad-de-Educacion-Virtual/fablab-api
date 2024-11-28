@@ -70,7 +70,6 @@ public class ParticipanteService {
         return participante.get();
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Participante participante) throws ResourceNotFoundException {
         if (participante == null || participante.getId() == null) {
             throw new ResourceNotFoundException("El participante no existe.");
@@ -78,7 +77,6 @@ public class ParticipanteService {
         showErrorIfNotExist(participante.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Participante> participante = participanteRepository.findById(id);
 

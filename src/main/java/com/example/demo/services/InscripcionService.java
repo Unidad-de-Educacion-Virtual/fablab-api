@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 public class InscripcionService {
 
     @Autowired

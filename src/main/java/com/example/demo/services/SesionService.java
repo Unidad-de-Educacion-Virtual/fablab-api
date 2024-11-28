@@ -78,7 +78,6 @@ public class SesionService {
         return sesion.get();
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Sesion sesion) throws ResourceNotFoundException {
         if (sesion == null || sesion.getId() == null) {
             throw new ResourceNotFoundException("La sesión no existe.");
@@ -86,7 +85,6 @@ public class SesionService {
         showErrorIfNotExist(sesion.getId());
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void showErrorIfNotExist(Long id) throws ResourceNotFoundException {
         Optional<Sesion> sesion = sesionRepository.findById(id);
 

@@ -14,31 +14,35 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class TipoDocumentoService {
 
     @Autowired
     private TipoDocumentoRepository tipoDocumentoRepository;
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public TipoDocumento buscarTipoDocumento(Long id) throws ResourceNotFoundException {
         this.showErrorIfNotExist(id);
         Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
         return tipoDocumento.get();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<TipoDocumento> listarTipoDocumentos() {
         return tipoDocumentoRepository.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public TipoDocumento crearTipoDocumento(TipoDocumento tipoDocumento) {
         return tipoDocumentoRepository.save(tipoDocumento);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public TipoDocumento actualizarTipoDocumento(TipoDocumento tipoDocumento) throws ResourceNotFoundException {
         this.showErrorIfNotExist(tipoDocumento.getId());
         return tipoDocumentoRepository.save(tipoDocumento);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public TipoDocumento eliminarTipoDocumento(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<TipoDocumento> tipoDocumento = tipoDocumentoRepository.findById(id);
