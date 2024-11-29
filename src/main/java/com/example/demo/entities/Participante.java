@@ -2,9 +2,11 @@ package com.example.demo.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
+@EqualsAndHashCode(of = {"id"})
 public class Participante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

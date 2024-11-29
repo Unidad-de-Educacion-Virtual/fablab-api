@@ -12,12 +12,17 @@ public class InstructorDTO {
     private Long id;
     private String nombre;
     private String documento;
+    private String email;
 
     public static InstructorDTO fromEntity(Instructor instructor) {
         InstructorDTO instructorDTO = new InstructorDTO();
         instructorDTO.setId(instructor.getId());
         instructorDTO.setNombre(instructor.getNombre());
         instructorDTO.setDocumento(instructor.getDocumento());
+        
+        if(instructor.getUser() != null) {
+        	instructorDTO.setEmail(instructor.getUser().getEmail());
+        }
         
         return instructorDTO;
     }

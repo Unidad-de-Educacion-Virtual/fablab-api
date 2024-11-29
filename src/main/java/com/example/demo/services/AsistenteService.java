@@ -1,22 +1,28 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Asistente;
+import com.example.demo.entities.Inscripcion;
+import com.example.demo.entities.Participante;
+import com.example.demo.entities.Programacion;
+import com.example.demo.entities.Sesion;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
 import com.example.demo.repositories.AsistenteRepository;
+import com.example.demo.repositories.ParticipanteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 public class AsistenteService {
-
+	
     @Autowired
     private AsistenteRepository asistenteRepository;
 
@@ -25,6 +31,10 @@ public class AsistenteService {
 
     @Autowired
     private ParticipanteService participanteService;
+    
+
+    @Autowired
+    private InscripcionService inscripcionService;
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Asistente buscarAsistente(Long id) throws ResourceNotFoundException {
@@ -43,7 +53,19 @@ public class AsistenteService {
 
         sesionService.showErrorIfNotExist(asistente.getSesion());
         participanteService.showErrorIfNotExist(asistente.getParticipante());
-
+        
+        Sesion sesion = sesionService.buscarSesion(asistente.getSesion().getId());
+        List<Inscripcion> inscripciones = sesion.getProgramacion().getInscripciones();
+        List<Participante> participantes = new ArrayList<Participante>();
+        
+        for(Inscripcion inscripcion : inscripciones) {
+        	participantes.add(inscripcion.getParticipante());
+        }
+        
+        if(!participantes.contains(asistente.getParticipante())) {
+        	throw new IllegalArgumentException("El participante debe estar registrado en la programación");
+        }
+        
         return asistenteRepository.save(asistente);
     }
 

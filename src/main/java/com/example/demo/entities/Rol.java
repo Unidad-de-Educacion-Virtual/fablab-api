@@ -12,7 +12,7 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column
+    @Column(unique = true, nullable = false)
     private String descripcion;
     
 	@OneToMany(mappedBy = "rol", cascade= CascadeType.ALL)

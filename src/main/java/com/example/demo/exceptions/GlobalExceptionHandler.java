@@ -1,10 +1,16 @@
 package com.example.demo.exceptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,6 +39,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(createErrorResponse("Violación de integridad: " + ex.getMessage()), HttpStatus.CONFLICT);
     }
     
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(createErrorResponse(ex.getMessage()));
+    }
+    
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
+        List<String> errors = new ArrayList<String>();
+        
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            String errorMessage = violation.getMessage();
+            errors.add(errorMessage);
+        }
+        
+        return new ResponseEntity<>(createErrorResponse(errors.get(0)), HttpStatus.BAD_REQUEST);
+    }
     
     private ErrorResponse createErrorResponse(String message) {
         return new ErrorResponse(true, message);
