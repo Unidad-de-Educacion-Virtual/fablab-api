@@ -246,29 +246,4 @@ INSERT INTO inscripcion (id, fecha, participante_id, programacion_id) VALUES
 (1, '2024-11-27', 1, 1), (2, '2024-11-27', 2, 1), (3, '2024-11-27', 3, 1), (4, '2024-11-27', 4, 1), (5, '2024-11-27', 5, 1), (6, '2024-11-27', 6, 1), (7, '2024-11-27', 7, 1), (8, '2024-11-27', 8, 1), (9, '2024-11-27', 9, 1), (10, '2024-11-27', 10, 1),
 (11, '2024-11-27', 11, 2), (12, '2024-11-27', 12, 2), (13, '2024-11-27', 13, 2), (14, '2024-11-27', 14, 2), (15, '2024-11-27', 15, 2), (16, '2024-11-27', 16, 2), (17, '2024-11-27', 17, 2), (18, '2024-11-27', 18, 2), (19, '2024-11-27', 19, 2), (20, '2024-11-27', 20, 2);
 
--- Insertar datos en la tabla evidencia (requiere datos en otras tablas)
-INSERT INTO evidencia (id, fecha, sesion_id, observacion, url) VALUES
-(1, '2024-11-28', 1, 'Buena participación de los asistentes', 'url1.com'),
-(2, '2024-11-29', 2, 'Algunos asistentes llegaron tarde', 'url2.com'),
-(3, '2024-12-01', 3, 'Sesión exitosa', 'url3.com'),
-(4, '2024-12-02', 4, 'Se necesitaron más recursos', 'url4.com'),
-(5, '2025-01-15', 5, 'Participación activa', 'url5.com'),
-(6, '2025-01-16', 6, 'Algunos problemas técnicos', 'url6.com'),
-(7, '2025-02-10', 7, 'Sesión productiva', 'url7.com'),
-(8, '2025-02-11', 8, 'Necesidad de mejorar la metodología', 'url8.com'),
-(9, '2025-03-15', 9, 'Sesión muy interesante', 'url9.com'),
-(10, '2025-03-16', 10, 'Buena organización', 'url10.com'),
-(11, '2025-04-20', 11, 'Sesión corta', 'url11.com'),
-(12, '2025-04-21', 12, 'Excelente participación', 'url12.com'),
-(13, '2025-05-10', 13, 'Se requirio mas tiempo', 'url13.com'),
-(14, '2025-05-11', 14, 'Sesión bien planteada', 'url14.com'),
-(15, '2025-06-15', 15, 'Muy buena experiencia', 'url15.com'),
-(16, '2025-06-16', 16, 'Falta de motivación', 'url16.com'),
-(17, '2025-07-20', 17, 'Sesión enriquecedora', 'url17.com'),
-(18, '2025-07-21', 18, 'Algunos problemas con los materiales', 'url18.com'),
-(19, '2025-08-10', 19, 'Excelente trabajo en equipo', 'url19.com'),
-(20, '2025-08-11', 20, 'Sesión excelente', 'url20.com');
-
-
-
 -- **Nota:**  He usado la contraseña `Password123` para todos los usuarios. En un entorno real, esto es inaceptable.  Necesitas usar una función de hashing robusta como bcrypt (como indica el DDL) para generar contraseñas seguras para cada usuario. La función `$2a$10$...` ya realiza el hash bcrypt, pero el valor debe ser generado con una librería de bcrypt para cada contraseña diferente en lugar de usar el mismo valor repetido.  Recuerda que las contraseñas hasheadas  **no** se pueden revertir.
