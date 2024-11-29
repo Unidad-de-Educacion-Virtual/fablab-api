@@ -11,7 +11,6 @@ import lombok.Data;
 public class Programacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "El id no puede estar vacío")
     private Long id;
 
     @ManyToOne

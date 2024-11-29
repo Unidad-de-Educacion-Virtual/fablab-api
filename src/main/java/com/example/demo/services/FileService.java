@@ -19,7 +19,7 @@ import com.example.demo.exceptions.FilesException;
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
 public class FileService {
 	
-	private final String uploadDirectory = "src/main/resources/uploads/";
+	private final String uploadDirectory = "uploads";
 	
 	public Resource getFile(String filename) throws IOException {
 		Path filePath = Paths.get(uploadDirectory).resolve(filename).normalize();
