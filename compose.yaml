@@ -1,0 +1,20 @@
+name: fablab-service
+
+services:
+  fablab-api:
+    build: .
+    container_name: fablab-api
+    restart: unless-stopped
+    ports:
+      - 9091:8080
+    env_file:
+      - ./.env
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - fablab-service-network
+
+networks:
+  fablab-service-network:
+    name: fablab-service-network
+    driver: bridge
