@@ -47,11 +47,16 @@ public class ProgramacionService {
         return programacion.get();
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramaciones() {
-        Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return programacionRepository.findByInstructor(instructor);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof Instructor) {
+            Instructor instructor = (Instructor) principal;
+            return programacionRepository.findByInstructor(instructor);
+        }
+            return programacionRepository.findAll();
     }
+
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Programacion crearProgramacion(Programacion programacion) throws ResourceNotFoundException {
