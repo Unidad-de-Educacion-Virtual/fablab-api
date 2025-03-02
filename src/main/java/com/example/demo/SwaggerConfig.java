@@ -17,7 +17,7 @@ public class SwaggerConfig {
         return new OpenAPI()
             .info(new Info().title("Web Backend")
             .version("v1")
-            .description("René nos puso a chambear"))
+            .description("REST API para gestión de asistencias en el FabLab de la UFPS"))
         	.addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
         	.components(
         		new Components()
