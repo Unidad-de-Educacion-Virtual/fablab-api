@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.entities.Instructor;
 import com.example.demo.entities.Taller;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.exceptions.ResourceReferencedByOthersException;
@@ -8,8 +9,10 @@ import com.example.demo.repositories.TallerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,9 @@ public class TallerService {
 
     @Autowired
     private TallerRepository tallerRepository;
+
+    @Autowired
+    private InstructorService instructorService;
     
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
@@ -30,7 +36,12 @@ public class TallerService {
     }
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Taller> listarTalleres() {
-        return tallerRepository.findAll();
+        Instructor instructor = instructorService.getCurrentInstructor();
+        if(instructor != null) {
+            return tallerRepository.findTalleresByInstructor(instructor);
+        }else{
+            return tallerRepository.findAll();
+        }
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Taller crearTaller(Taller taller) {

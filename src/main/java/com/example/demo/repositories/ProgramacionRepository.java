@@ -25,6 +25,8 @@ public interface ProgramacionRepository extends JpaRepository<Programacion, Long
     List<Programacion> findByTallerIdAndInstructor(Long tallerId, Instructor instructor);
     
     List<Programacion> findByInstructor(Instructor instructor);
+
+    List<Programacion> findByTaller_Id(Long tallerId);
     
     @Query("SELECT p FROM Programacion p WHERE p.instructor = :instructor AND (p.fechaInicio > :fechaActual OR (:fechaActual BETWEEN p.fechaInicio AND p.fechaFin)) ORDER BY p.fechaInicio ASC")
     List<Programacion> findAllProximasOrActualesByInstructor(@Param("fechaActual") LocalDate fechaActual, @Param("instructor") Instructor instructor);

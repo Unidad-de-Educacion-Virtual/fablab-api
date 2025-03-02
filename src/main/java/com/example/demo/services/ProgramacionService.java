@@ -134,15 +134,18 @@ public class ProgramacionService {
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramacionesPorTaller(Long tallerId) throws ResourceNotFoundException {
-        Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return programacionRepository.findByTallerIdAndInstructor(tallerId, instructor);
+        Instructor instructor = instructorService.getCurrentInstructor();
+        if(instructor != null){
+            return programacionRepository.findByTallerIdAndInstructor(tallerId, instructor);
+        }
+        return programacionRepository.findByTaller_Id(tallerId);
     }
     
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramacionesPosteriores() {
     	 LocalDate fechaActual = LocalDate.now();
-    	 Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
+    	 Instructor instructor = instructorService.getCurrentInstructor();
          List<Programacion> programaciones = programacionRepository.findAllProximasOrActualesByInstructor(fechaActual, instructor);
          return programaciones;
     }

@@ -10,6 +10,7 @@ import com.example.demo.repositories.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,6 +107,17 @@ public class InstructorService {
         
         if (instructor.isEmpty()) {
             throw new ResourceNotFoundException("El instructor con id " + id + " no existe.");
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_INSTRUCTOR', 'ROLE_ADMIN')")
+    public Instructor getCurrentInstructor() {
+        String email = (String)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.buscarUsuario(email);
+        if(user.getInstructor() != null){
+            return user.getInstructor();
+        }else{
+            return null;
         }
     }
 }
