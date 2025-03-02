@@ -1,8 +1,10 @@
 package com.example.demo.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.demo.entities.Taller;
 
 public interface TallerRepository extends JpaRepository<Taller, Long> {
+
 }

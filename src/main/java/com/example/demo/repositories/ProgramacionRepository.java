@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entities.Instructor;
 import com.example.demo.entities.Programacion;
+import com.example.demo.entities.Taller;
 
 @Repository
 public interface ProgramacionRepository extends JpaRepository<Programacion, Long> {
@@ -26,6 +27,9 @@ public interface ProgramacionRepository extends JpaRepository<Programacion, Long
     
     List<Programacion> findByInstructor(Instructor instructor);
     
+    @Query("SELECT DISTINCT t FROM Taller t JOIN Programacion p ON t.id = p.taller.id WHERE p.instructor.id = :instructorId")
+    List<Taller> findTalleresByInstructorId(@Param("instructorId") Long instructorId);    
+
     @Query("SELECT p FROM Programacion p WHERE p.instructor = :instructor AND (p.fechaInicio > :fechaActual OR (:fechaActual BETWEEN p.fechaInicio AND p.fechaFin)) ORDER BY p.fechaInicio ASC")
     List<Programacion> findAllProximasOrActualesByInstructor(@Param("fechaActual") LocalDate fechaActual, @Param("instructor") Instructor instructor);
 }
