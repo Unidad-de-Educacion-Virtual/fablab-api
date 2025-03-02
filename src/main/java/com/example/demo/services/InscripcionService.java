@@ -31,7 +31,7 @@ public class InscripcionService {
         Optional<Inscripcion> inscripcion = inscripcionRepository.findById(id);
         return inscripcion.get();
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Inscripcion> listarInscripciones() {
         return inscripcionRepository.findAll();
     }
