@@ -1,13 +1,15 @@
 package com.example.demo.repositories;
 
-import com.example.demo.entities.Programacion;
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.example.demo.entities.Instructor;
+import com.example.demo.entities.Programacion;
 
 @Repository
 public interface ProgramacionRepository extends JpaRepository<Programacion, Long> {
@@ -20,8 +22,10 @@ public interface ProgramacionRepository extends JpaRepository<Programacion, Long
            "(:fechaInicio BETWEEN p.fechaInicio AND p.fechaFin OR :fechaFin BETWEEN p.fechaInicio AND p.fechaFin)")
     List<Programacion> findConflictsByUbicacion(Long ubicacionId, LocalDate fechaInicio, LocalDate fechaFin);
 
-    List<Programacion> findByTallerId(Long tallerId);
+    List<Programacion> findByTallerIdAndInstructor(Long tallerId, Instructor instructor);
     
-    @Query("SELECT p FROM Programacion p WHERE p.fechaInicio > :fechaActual OR (:fechaActual BETWEEN p.fechaInicio AND p.fechaFin) ORDER BY p.fechaInicio ASC")
-    List<Programacion> findAllProximasOrActuales(@Param("fechaActual") LocalDate fechaActual);
+    List<Programacion> findByInstructor(Instructor instructor);
+    
+    @Query("SELECT p FROM Programacion p WHERE p.instructor = :instructor AND (p.fechaInicio > :fechaActual OR (:fechaActual BETWEEN p.fechaInicio AND p.fechaFin)) ORDER BY p.fechaInicio ASC")
+    List<Programacion> findAllProximasOrActualesByInstructor(@Param("fechaActual") LocalDate fechaActual, @Param("instructor") Instructor instructor);
 }

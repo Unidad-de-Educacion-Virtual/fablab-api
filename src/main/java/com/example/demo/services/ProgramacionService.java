@@ -1,19 +1,20 @@
 package com.example.demo.services;
 
-import com.example.demo.DTO.ProgramacionDTO;
-import com.example.demo.entities.Programacion;
-import com.example.demo.exceptions.ResourceNotFoundException;
-import com.example.demo.exceptions.ResourceReferencedByOthersException;
-import com.example.demo.repositories.ProgramacionRepository;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import com.example.demo.entities.Instructor;
+import com.example.demo.entities.Programacion;
+import com.example.demo.exceptions.ResourceNotFoundException;
+import com.example.demo.exceptions.ResourceReferencedByOthersException;
+import com.example.demo.repositories.ProgramacionRepository;
 
 @Service
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
@@ -48,7 +49,8 @@ public class ProgramacionService {
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Programacion> listarProgramaciones() {
-        return programacionRepository.findAll();
+        Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return programacionRepository.findByInstructor(instructor);
     }
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -127,14 +129,16 @@ public class ProgramacionService {
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramacionesPorTaller(Long tallerId) throws ResourceNotFoundException {
-        return programacionRepository.findByTallerId(tallerId);
+        Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return programacionRepository.findByTallerIdAndInstructor(tallerId, instructor);
     }
     
     
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public List<Programacion> listarProgramacionesPosteriores() {
     	 LocalDate fechaActual = LocalDate.now();
-         List<Programacion> programaciones = programacionRepository.findAllProximasOrActuales(fechaActual);
+    	 Instructor instructor = (Instructor)SecurityContextHolder.getContext().getAuthentication().getDetails();
+         List<Programacion> programaciones = programacionRepository.findAllProximasOrActualesByInstructor(fechaActual, instructor);
          return programaciones;
     }
 }
