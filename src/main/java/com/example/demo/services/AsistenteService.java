@@ -79,7 +79,7 @@ public class AsistenteService {
         return asistenteRepository.save(asistente);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
     public Asistente eliminarAsistente(Long id) throws ResourceNotFoundException, ResourceReferencedByOthersException {
         this.showErrorIfNotExist(id);
         Optional<Asistente> asistente = asistenteRepository.findById(id);
