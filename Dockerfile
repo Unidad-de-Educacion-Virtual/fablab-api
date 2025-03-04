@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the port
-EXPOSE 9091
+EXPOSE 8080
 
 # Create a volume for the uploads
 VOLUME /app/uploads

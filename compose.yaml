@@ -5,8 +5,8 @@ services:
     build: .
     container_name: fablab-api
     restart: unless-stopped
-    ports:
-      - 9091:8080
+    expose:
+      - 8080
     env_file:
       - ./.env
     volumes:
